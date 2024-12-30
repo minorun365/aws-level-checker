@@ -26,7 +26,9 @@ def lambda_handler(event, context):
 
         client = boto3.client("bedrock-runtime", region_name="us-east-1")
         user_message = f"""
-以下のブログのAWSレベルを判定してください。
+あなたはAWS社のソリューションアーキテクトです。以下のブログのAWSレベルを判定してください。
+ただし、もしブログ内容のテキストではなく、単一のURLが入力された場合は
+「URLの読み込みには対応していません。内容をコピペして送信してね🙏」と返してください。
 
 <評価基準>
 Level 100 : AWS サービスの概要を解説するレベル
