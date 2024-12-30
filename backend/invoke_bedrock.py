@@ -1,7 +1,7 @@
 import boto3, json, os
 
-ALLOWED_ORIGIN = os.environ["ALLOWED_ORIGIN"] # https://your.domain.com
-BEDROCK_INFERENCE_PROFILE_ARN = os.environ["BEDROCK_INFERENCE_PROFILE_ARN"] # arn:aws:bedrock:us-east-1:<AccountID>:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0
+ALLOWED_ORIGIN = os.environ["ALLOWED_ORIGIN"]
+BEDROCK_INFERENCE_PROFILE_ARN = os.environ["BEDROCK_INFERENCE_PROFILE_ARN"]
 
 def get_cors_headers():
     return {
