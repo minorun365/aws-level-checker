@@ -130,6 +130,17 @@ function App() {
                       </p>
                     ))}
                   </CardContent>
+                  <div className="px-4 pb-4">
+                    <a
+                      onClick={() => {
+                        const text = encodeURIComponent("AWSアウトプットのレベルを判定しました！ #AWSレベル判定くん https://checker.minoruonda.com/");
+                        window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
+                      }}
+                      className="w-full mt-4 bg-zinc-900 hover:bg-zinc-800 text-white font-medium flex items-center justify-center gap-2 py-2.5 rounded-lg border border-zinc-700 transition-all duration-200 shadow-sm"
+                    >
+                      Xでポストする
+                    </a>
+                  </div>
                 </Card>
               )}
 
