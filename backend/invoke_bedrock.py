@@ -1,11 +1,14 @@
-import boto3, json, os
-
-ALLOWED_ORIGIN = os.environ["ALLOWED_ORIGIN"]
-BEDROCK_INFERENCE_PROFILE_ARN = os.environ["BEDROCK_INFERENCE_PROFILE_ARN"]
+import boto3, json, os, requests
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.runnables import RunnablePassthrough
+from langchain_core.output_parsers import StrOutputParser
+from langchain_aws import ChatBedrockConverse
+from langfuse.decorators import observe
+from langfuse.callback import CallbackHandler
 
 def get_cors_headers():
     return {
-        "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
+        "Access-Control-Allow-Origin": os.environ["ALLOWED_ORIGIN"],
         "Access-Control-Allow-Headers": "Content-Type,Authorization",
         "Access-Control-Allow-Methods": "OPTIONS,POST",
         "Access-Control-Allow-Credentials": "true"
@@ -19,13 +22,30 @@ def create_response(status_code, message):
     }
 
 def lambda_handler(event, context):
-    try:            
-        blog_content = event.get("blogContent")
-        if not blog_content:
+    headers = {"X-Aws-Parameters-Secrets-Token": os.environ.get('AWS_SESSION_TOKEN')}
+    secrets_extension_endpoint = os.environ["LANGFUSE_SECRET_URL"]
+    r = requests.get(secrets_extension_endpoint, headers=headers)
+    secret = json.loads(r.text)["SecretString"]
+    
+    if isinstance(secret, str):
+        secret = json.loads(secret)
+
+    llm = ChatBedrockConverse(
+        model=os.environ["BEDROCK_INFERENCE_PROFILE_ARN"],
+        max_tokens=4096,
+    )
+
+    langfuse_handler = CallbackHandler(
+        secret_key=secret.get("LANGFUSE_SECRET_KEY"),
+        public_key=secret.get("LANGFUSE_PUBLIC_KEY"),
+        host=os.environ["LANGFUSE_HOST"],
+    )
+
+    try:
+        if not event.get("blogContent"):
             return create_response(400, "アウトプットの内容が入力されていないようです🤔")
 
-        client = boto3.client("bedrock-runtime", region_name="us-east-1")
-        user_message = f"""
+        prompt = ChatPromptTemplate.from_template("""
 あなたはAWS社のソリューションアーキテクトです。以下のコンテンツ（ブログもしくは登壇資料）のAWS技術レベルを判定してください。
 
 ただし、もしコンテンツ内容のテキストではなく、単一のURLが入力された場合は
@@ -39,28 +59,15 @@ Level 400 : 複数のサービス、アーキテクチャによる実装でテ�
 </評価基準>
 
 <コンテンツ>
-{blog_content}"""
-        
-        messages = [
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "text": user_message,
-                    }
-                ],
-            }
-        ]
-
-        response = client.converse(
-            modelId=BEDROCK_INFERENCE_PROFILE_ARN,
-            messages=messages,
-            inferenceConfig={
-                "maxTokens": 4096,
-            },
+{blog_content}
+</コンテンツ>""")
+        chain = prompt | llm | StrOutputParser()
+        output = chain.invoke(
+            input={"blog_content": event.get("blogContent")},
+            config={"callbacks": [langfuse_handler]}
         )
-
-        output = response["output"]["message"]["content"][0]["text"]        
+        langfuse_handler.flush()
+        
         return create_response(200, output)
 
     except Exception as e:
