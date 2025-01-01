@@ -64,7 +64,10 @@ Level 400 : 複数のサービス、アーキテクチャによる実装でテ�
         chain = prompt | llm | StrOutputParser()
         output = chain.invoke(
             input={"blog_content": event.get("blogContent")},
-            config={"callbacks": [langfuse_handler]}
+            config={
+                "run_name": "AWS Level Checker",
+                "callbacks": [langfuse_handler]
+            }
         )
         langfuse_handler.flush()
         
