@@ -29,7 +29,10 @@ function App() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${auth.user?.id_token}`
         },
-        body: JSON.stringify({ blogContent }),
+        body: JSON.stringify({
+          blogContent,
+          userEmail: auth.user?.profile?.email
+        }),
       });
   
       if (!response.ok) {

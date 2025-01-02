@@ -66,7 +66,10 @@ Level 400 : 複数のサービス、アーキテクチャによる実装でテ�
             input={"blog_content": event.get("blogContent")},
             config={
                 "run_name": "AWS Level Checker",
-                "callbacks": [langfuse_handler]
+                "callbacks": [langfuse_handler],
+                "metadata": {
+                    "user_email": event.get("userEmail")
+                }
             }
         )
         langfuse_handler.flush()
