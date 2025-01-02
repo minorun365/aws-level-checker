@@ -18,7 +18,7 @@ def create_response(status_code, message):
     return {
         "statusCode": status_code,
         "headers": get_cors_headers(),
-        "body": json.dumps({"message": message})
+        "body": json.dumps(message)
     }
 
 def lambda_handler(event, context):
@@ -43,7 +43,10 @@ def lambda_handler(event, context):
 
     try:
         if not event.get("blogContent"):
-            return create_response(400, "アウトプットの内容が入力されていないようです🤔")
+            return create_response(400, {
+                    "message": "アウトプットの内容が入力されていないようです🤔"
+                }
+            )
 
         prompt = ChatPromptTemplate.from_template("""
 あなたはAWS社のソリューションアーキテクトです。以下のコンテンツ（ブログもしくは登壇資料）のAWS技術レベルを判定してください。
@@ -74,7 +77,12 @@ Level 400 : 複数のサービス、アーキテクチャによる実装でテ�
         )
         langfuse_handler.flush()
         
-        return create_response(200, output)
+        return create_response(200, {
+            "message": output,
+            "traceId": langfuse_handler.get_trace_id()
+        })
 
     except Exception as e:
-        return create_response(500, f"エラーが発生しました: {str(e)}")
+        return create_response(500, {
+            "message": f"エラーが発生しました: {str(e)}"
+        })
