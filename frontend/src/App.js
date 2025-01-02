@@ -13,6 +13,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [traceId, setTraceId] = useState('');
+  const [feedback, setFeedback] = useState(null);
 
   const auth = useAuth();
 
@@ -23,6 +24,7 @@ function App() {
   const invokeBedrock = async () => {
     setIsLoading(true);
     setError('');
+    setFeedback(null); // フィードバックをリセット
   
     try {
       const response = await fetch(`${config.apiEndpoint}/check`, {
@@ -53,6 +55,7 @@ function App() {
   };
 
   const handleFeedback = async (value) => {
+    setFeedback(value);
     const langfuseWeb = new LangfuseWeb({
       publicKey: config.langfusePublicKey,
       baseUrl: "https://us.cloud.langfuse.com"
@@ -162,15 +165,25 @@ function App() {
                     <div className="flex gap-2">
                       <Button
                         onClick={() => handleFeedback(1)}
-                        className="mt-4 bg-gray-500 hover:bg-gray-600"
+                        disabled={feedback !== null}
+                        className={`mt-4 ${
+                          feedback === null 
+                            ? 'bg-gray-500 hover:bg-gray-600' 
+                            : 'bg-gray-800 cursor-not-allowed'
+                        }`}
                       >
-                        👍
+                        {feedback === 1 ? '✅' : '👍'}
                       </Button>
                       <Button
                         onClick={() => handleFeedback(0)}
-                        className="mt-4 bg-gray-500 hover:bg-gray-600"
+                        disabled={feedback !== null}
+                        className={`mt-4 ${
+                          feedback === null 
+                            ? 'bg-gray-500 hover:bg-gray-600' 
+                            : 'bg-gray-800 cursor-not-allowed'
+                        }`}
                       >
-                        👎
+                        {feedback === 0 ? '✅' : '👎'}
                       </Button>
                     </div>
                   </div>
