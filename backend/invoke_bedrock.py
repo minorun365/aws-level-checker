@@ -39,6 +39,7 @@ def lambda_handler(event, context):
         secret_key=secret.get("LANGFUSE_SECRET_KEY"),
         public_key=secret.get("LANGFUSE_PUBLIC_KEY"),
         host=os.environ["LANGFUSE_HOST"],
+        user_id=event.get("userEmail")
     )
 
     try:
@@ -69,10 +70,7 @@ Level 400 : 複数のサービス、アーキテクチャによる実装でテ�
             input={"blog_content": event.get("blogContent")},
             config={
                 "run_name": "AWS Level Checker",
-                "callbacks": [langfuse_handler],
-                "metadata": {
-                    "user_email": event.get("userEmail")
-                }
+                "callbacks": [langfuse_handler]
             }
         )
         langfuse_handler.flush()
