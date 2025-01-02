@@ -5,12 +5,14 @@ import { Textarea } from "./components/ui/textarea"
 
 import { useState } from 'react';
 import { useAuth } from "react-oidc-context";
+import { LangfuseWeb } from "langfuse";
 
 function App() {
   const [blogContent, setBlogContent] = useState('');
   const [response, setResponse] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [traceId, setTraceId] = useState('');
 
   const auth = useAuth();
 
@@ -42,11 +44,25 @@ function App() {
       const data = await response.json();
       const bodyData = JSON.parse(data.body);
       setResponse(bodyData.message);
+      setTraceId(bodyData.traceId);
     } catch (error) {
       setError('エラーが発生しました。ページを再読み込みして、もう一度お試しください。');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleFeedback = async (value) => {
+    const langfuseWeb = new LangfuseWeb({
+      publicKey: config.langfusePublicKey,
+      baseUrl: "https://us.cloud.langfuse.com"
+    });
+    
+    await langfuseWeb.score({
+      traceId: traceId,
+      name: "user_feedback",
+      value,
+    });
   };
 
   if (auth.isLoading) {
@@ -133,16 +149,30 @@ function App() {
                       </p>
                     ))}
                   </CardContent>
-                  <div className="px-4 pb-4">
+                  <div className="px-4 pb-4 flex gap-2">
                     <a
                       onClick={() => {
                         const text = encodeURIComponent("AWSアウトプットのレベルを判定しました！ #AWSレベル判定くん https://checker.minoruonda.com/");
                         window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
                       }}
-                      className="w-full mt-4 bg-zinc-900 hover:bg-zinc-800 text-white font-medium flex items-center justify-center gap-2 py-2.5 rounded-lg border border-zinc-700 transition-all duration-200 shadow-sm"
+                      className="flex-1 mt-4 bg-zinc-900 hover:bg-zinc-800 text-white font-medium flex items-center justify-center gap-2 py-2.5 rounded-lg border border-zinc-700 transition-all duration-200 shadow-sm"
                     >
                       Xでポストする
                     </a>
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => handleFeedback(1)}
+                        className="mt-4 bg-gray-500 hover:bg-gray-600"
+                      >
+                        👍
+                      </Button>
+                      <Button
+                        onClick={() => handleFeedback(0)}
+                        className="mt-4 bg-gray-500 hover:bg-gray-600"
+                      >
+                        👎
+                      </Button>
+                    </div>
                   </div>
                 </Card>
               )}
