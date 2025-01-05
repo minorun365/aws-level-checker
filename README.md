@@ -15,5 +15,5 @@ https://checker.minoruonda.com/
 
 1. AWSインフラ一式を構築する
 2. `frontend` ディレクトリで `npm run build` を実行する
-3. `aws s3 sync build/ s3://<バケット名> --delete` を実行する
+3. `aws s3 sync dist/ s3://<バケット名> --delete` を実行する
 4. CloudFrontのキャッシュを削除する
