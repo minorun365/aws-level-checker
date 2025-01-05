@@ -13,7 +13,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [traceId, setTraceId] = useState('');
-  const [feedback, setFeedback] = useState(null);
+  const [feedback, setFeedback] = useState<0 | 1 | null>(null);
 
   const auth = useAuth();
 
@@ -54,7 +54,7 @@ function App() {
     }
   };
 
-  const handleFeedback = async (value) => {
+  const handleFeedback = async (value: 0 | 1) => {
     setFeedback(value);
     const langfuseWeb = new LangfuseWeb({
       publicKey: config.langfusePublicKey,
@@ -126,7 +126,7 @@ function App() {
                 onChange={(e) => setBlogContent(e.target.value)}
                 placeholder={`評価したいブログや登壇資料の内容を、テキスト形式でここにコピペしてね
 （URLを入れてもページを読みに行くことはできません）`}
-                className="min-h-[200px] bg-gray-700 text-white border-gray-600"
+                className="min-h-[200px] bg-gray-700 text-white border-gray-600 placeholder:text-gray-300"
               />
 
               <Button
