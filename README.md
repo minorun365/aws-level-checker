@@ -14,7 +14,6 @@ https://checker.minoruonda.com/
 ## デプロイ方法
 
 1. AWSインフラ一式を構築する
-2. `.env` ファイルを編集して、デプロイ先（本番 or テスト）でない環境変数をコメントアウトする
-3. `frontend` ディレクトリで `npm run build` を実行する
-4. `aws s3 sync dist/ s3://<バケット名（本番 or テスト）> --delete` を実行する
-5. CloudFrontのキャッシュを削除する
+2. `frontend` ディレクトリで `npm run build:{dev|prd}` を実行する
+3. `aws s3 sync dist/ s3://{バケット名(dev|prd)} --delete` を実行する
+4. CloudFrontのキャッシュを削除する
