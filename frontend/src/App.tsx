@@ -18,8 +18,11 @@ function App() {
   const auth = useAuth();
 
   const signOutRedirect = () => {
-    window.location.href = `${config.cognitoDomain}/logout?client_id=${config.cognitoClientId}&logout_uri=${encodeURIComponent(config.logoutUri)}&response_type=code`;
-  };
+    const clientId = config.cognitoClientId;
+    const logoutUri = config.logoutUri;
+    const cognitoDomain = config.cognitoDomain;
+    window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
+  }; // うまくサインアウトされない
 
   const invokeBedrock = async () => {
     setIsLoading(true);
