@@ -15,7 +15,7 @@ function App() {
   const [traceId, setTraceId] = useState('');
   const [feedback, setFeedback] = useState<0 | 1 | null>(null);
   const [isPostLoading, setIsPostLoading] = useState(false);
-  const [predefinedSessionId, setPredefinedSessionId] = useState<string>('');
+  const [langfuseSessionId, setLangfuseSessionId] = useState<string>('');
 
   const auth = useAuth();
 
@@ -52,7 +52,7 @@ function App() {
       const bodyData = JSON.parse(data.body);
       setResponse(bodyData.message);
       setTraceId(bodyData.traceId);
-      setPredefinedSessionId(bodyData.predefinedSessionId);
+      setLangfuseSessionId(bodyData.predefinedSessionId);
     } catch (error) {
       setError('エラーが発生しました。ページを再読み込みして、もう一度お試しください。');
     } finally {
@@ -172,7 +172,7 @@ function App() {
                             body: JSON.stringify({
                               evalResult: response,
                               userEmail: auth.user?.profile?.email,
-                              predefinedSessionId: predefinedSessionId
+                              langfuseSessionId: langfuseSessionId
                             }),
                           });
 
