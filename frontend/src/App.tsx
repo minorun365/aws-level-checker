@@ -14,6 +14,7 @@ function App() {
   const [error, setError] = useState('');
   const [traceId, setTraceId] = useState('');
   const [feedback, setFeedback] = useState<0 | 1 | null>(null);
+  const [isPostLoading, setIsPostLoading] = useState(false);
 
   const auth = useAuth();
 
@@ -137,7 +138,7 @@ function App() {
                 disabled={isLoading}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white"
               >
-                {isLoading ? "分析中⌛️ 10秒ちょい待ってね" : "Bedrockに判定してもらう！"}
+                {isLoading ? "分析中⌛️　10秒ちょい待ってね" : "Bedrockに判定してもらう！"}
               </Button>
 
               {error && (
@@ -158,6 +159,7 @@ function App() {
                   <div className="px-4 pb-4 flex gap-2">
                     <a
                       onClick={async () => {
+                        setIsPostLoading(true);
                         try {
                           const generateResponse = await fetch(`${config.tweetApiEndpoint}/check`, {
                             method: 'POST',
@@ -182,11 +184,17 @@ function App() {
                         } catch (error) {
                           console.error('ツイート生成エラー:', error);
                           setError('ツイート生成中にエラーが発生しました。もう一度お試しください。');
+                        } finally {
+                          setIsPostLoading(false);
                         }
                       }}
-                      className="flex-1 mt-4 bg-zinc-900 hover:bg-zinc-800 text-white font-medium flex items-center justify-center gap-2 py-2.5 rounded-lg border border-zinc-700 transition-all duration-200 shadow-sm"
+                      className={`flex-1 mt-4 ${
+                        isPostLoading 
+                          ? 'bg-zinc-700 cursor-not-allowed'
+                          : 'bg-zinc-900 hover:bg-zinc-800 cursor-pointer'
+                      } text-white font-medium flex items-center justify-center gap-2 py-2.5 rounded-lg border border-zinc-700 transition-all duration-200 shadow-sm`}
                     >
-                      Xでポストする
+                      {isPostLoading ? "ポスト文案を生成中⌛️　10秒ちょい待ってね" : "Xでポストする"}
                     </a>
                     <div className="flex gap-2">
                       <Button
