@@ -119,13 +119,13 @@ function App() {
           <Card className="bg-gray-800 border-gray-700">
             <CardHeader>
               <CardTitle className="text-2xl font-bold text-white">
-                AWSアウトプットのレベル判定くん
+                # AWSレベル判定くん
               </CardTitle>
             </CardHeader>
 
             <CardContent className="space-y-4">
               <p className="text-white">
-                あなたのアウトプットを以下に貼り付けてください。
+                あなたのアウトプットを以下に貼り付けてください。賢い生成AIがレベルを分析します。
               </p>
               <Textarea
                 value={blogContent}
@@ -140,7 +140,7 @@ function App() {
                 disabled={isLoading}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white"
               >
-                {isLoading ? "分析中⌛️ 10秒ちょい待ってね" : "Bedrockに判定してもらう！"}
+                {isLoading ? "分析中⌛️ 10秒ちょい待ってね" : "Amazon Bedrockに判定してもらう！"}
               </Button>
 
               {error && (
@@ -238,6 +238,9 @@ function App() {
               </ul>
             </CardContent>
           </Card>
+        </div>
+        <div className="max-w-4xl mx-auto mt-4 text-gray-400 text-sm">
+          このアプリは <a href="https://x.com/minorun365" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">みのるん</a> が開発しました。
         </div>
       </div>
     );
