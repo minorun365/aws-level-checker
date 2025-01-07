@@ -1,4 +1,4 @@
-import boto3, json, os, requests
+import boto3, json, os, uuid, requests
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
@@ -35,11 +35,13 @@ def lambda_handler(event, context):
         max_tokens=4096,
     )
 
+    predefined_session_id = str(uuid.uuid4())
     langfuse_handler = CallbackHandler(
         secret_key=secret.get("LANGFUSE_SECRET_KEY"),
         public_key=secret.get("LANGFUSE_PUBLIC_KEY"),
         host=os.environ["LANGFUSE_HOST"],
-        user_id=event.get("userEmail")
+        user_id=event.get("userEmail"),
+        session_id=predefined_session_id
     )
 
     try:
@@ -69,7 +71,7 @@ Level 400 : 複数のサービス、アーキテクチャによる実装でテ�
         output = chain.invoke(
             input={"blog_content": event.get("blogContent")},
             config={
-                "run_name": "AWS Level Checker",
+                "run_name": "Output Evaluation",
                 "callbacks": [langfuse_handler]
             }
         )
@@ -77,7 +79,8 @@ Level 400 : 複数のサービス、アーキテクチャによる実装でテ�
         
         return create_response(200, {
             "message": output,
-            "traceId": langfuse_handler.get_trace_id()
+            "traceId": langfuse_handler.get_trace_id(),
+            "predefinedSessionId": predefined_session_id
         })
 
     except Exception as e:
