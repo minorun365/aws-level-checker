@@ -39,7 +39,8 @@ def lambda_handler(event, context):
         secret_key=secret.get("LANGFUSE_SECRET_KEY"),
         public_key=secret.get("LANGFUSE_PUBLIC_KEY"),
         host=os.environ["LANGFUSE_HOST"],
-        user_id=event.get("userEmail")
+        user_id=event.get("userEmail"),
+        session_id=event.get("predefinedSessionId")
     )
 
     try:
@@ -70,7 +71,7 @@ https://checker.minoruonda.com/
         output = chain.invoke(
             input={"eval_result": event.get("evalResult")},
             config={
-                "run_name": "AWS Level Checker",
+                "run_name": "Tweet Generation",
                 "callbacks": [langfuse_handler]
             }
         )
