@@ -157,9 +157,32 @@ function App() {
                   </CardContent>
                   <div className="px-4 pb-4 flex gap-2">
                     <a
-                      onClick={() => {
-                        const text = encodeURIComponent("AWSアウトプットのレベルを判定しました！ #AWSレベル判定くん https://checker.minoruonda.com/");
-                        window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
+                      onClick={async () => {
+                        try {
+                          const generateResponse = await fetch(`${config.tweetApiEndpoint}/check`, {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json',
+                              'Authorization': `Bearer ${auth.user?.id_token}`
+                            },
+                            body: JSON.stringify({
+                              evalResult: response,
+                              userEmail: auth.user?.profile?.email
+                            }),
+                          });
+
+                          if (!generateResponse.ok) {
+                            throw new Error('ツイート生成APIエラーが発生しました');
+                          }
+
+                          const data = await generateResponse.json();
+                          const bodyData = JSON.parse(data.body);
+                          const tweetText = encodeURIComponent(bodyData.message);
+                          window.open(`https://twitter.com/intent/tweet?text=${tweetText}`, '_blank');
+                        } catch (error) {
+                          console.error('ツイート生成エラー:', error);
+                          setError('ツイート生成中にエラーが発生しました。もう一度お試しください。');
+                        }
                       }}
                       className="flex-1 mt-4 bg-zinc-900 hover:bg-zinc-800 text-white font-medium flex items-center justify-center gap-2 py-2.5 rounded-lg border border-zinc-700 transition-all duration-200 shadow-sm"
                     >
