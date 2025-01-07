@@ -15,7 +15,7 @@ function App() {
   const [traceId, setTraceId] = useState('');
   const [feedback, setFeedback] = useState<0 | 1 | null>(null);
   const [isPostLoading, setIsPostLoading] = useState(false);
-  const [predefinedSessionId, setPredefinedSessionId] = useState<string>('');
+  const [langfuseSessionId, setLangfuseSessionId] = useState<string>('');
 
   const auth = useAuth();
 
@@ -52,7 +52,7 @@ function App() {
       const bodyData = JSON.parse(data.body);
       setResponse(bodyData.message);
       setTraceId(bodyData.traceId);
-      setPredefinedSessionId(bodyData.predefinedSessionId);
+      setLangfuseSessionId(bodyData.predefinedSessionId);
     } catch (error) {
       setError('エラーが発生しました。ページを再読み込みして、もう一度お試しください。');
     } finally {
@@ -119,13 +119,13 @@ function App() {
           <Card className="bg-gray-800 border-gray-700">
             <CardHeader>
               <CardTitle className="text-2xl font-bold text-white">
-                AWSアウトプットのレベル判定くん
+                # AWSレベル判定くん
               </CardTitle>
             </CardHeader>
 
             <CardContent className="space-y-4">
               <p className="text-white">
-                あなたのアウトプットを以下に貼り付けてください。
+                あなたのアウトプットを以下に貼り付けてください。賢い生成AIがレベルを分析します。
               </p>
               <Textarea
                 value={blogContent}
@@ -140,7 +140,7 @@ function App() {
                 disabled={isLoading}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white"
               >
-                {isLoading ? "分析中⌛️　10秒ちょい待ってね" : "Bedrockに判定してもらう！"}
+                {isLoading ? "分析中⌛️ 10秒ちょい待ってね" : "Amazon Bedrockに判定してもらう！"}
               </Button>
 
               {error && (
@@ -172,7 +172,7 @@ function App() {
                             body: JSON.stringify({
                               evalResult: response,
                               userEmail: auth.user?.profile?.email,
-                              predefinedSessionId: predefinedSessionId
+                              langfuseSessionId: langfuseSessionId
                             }),
                           });
 
@@ -197,7 +197,7 @@ function App() {
                           : 'bg-zinc-900 hover:bg-zinc-800 cursor-pointer'
                       } text-white font-medium flex items-center justify-center gap-2 py-2.5 rounded-lg border border-zinc-700 transition-all duration-200 shadow-sm`}
                     >
-                      {isPostLoading ? "ポスト文案を生成中⌛️　10秒ちょい待ってね" : "Xでポストする"}
+                      {isPostLoading ? "ポスト文案を生成中⌛️ 10秒ちょい待ってね" : "Xでポストする"}
                     </a>
                     <div className="flex gap-2">
                       <Button
@@ -238,6 +238,9 @@ function App() {
               </ul>
             </CardContent>
           </Card>
+        </div>
+        <div className="max-w-4xl mx-auto mt-4 text-gray-400 text-sm">
+          このアプリは <a href="https://x.com/minorun365" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">みのるん</a> が開発しました。
         </div>
       </div>
     );
