@@ -14,6 +14,6 @@ https://checker.minoruonda.com/
 ## デプロイ方法
 
 1. AWSインフラ一式を構築する
-2. `frontend` ディレクトリで `npm run build:{dev|prd}` を実行する
-3. `aws s3 sync dist/ s3://{バケット名(dev|prd)} --delete` を実行する
-4. CloudFrontのキャッシュを削除する
+2. ビルド： `frontend` ディレクトリで `npm run build:{dev|prd}` を実行する
+3. デプロイ： `aws s3 sync dist/ s3://{バケット名} --delete` を実行する
+4. キャッシュクリア： `aws cloudfront create-invalidation --distribution-id {ディストリビューションID}} --paths "/*"` を実行する``
