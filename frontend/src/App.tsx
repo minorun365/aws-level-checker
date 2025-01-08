@@ -249,7 +249,7 @@ function App() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 p-4">
       <Button
-        onClick={() => auth.signinRedirect()}
+        onClick={() => auth.signinRedirect({ extraQueryParams: { lang: 'ja' } })}
         className="w-full bg-blue-600 hover:bg-blue-700 text-white"
         >
           サインインしてはじめよう！
