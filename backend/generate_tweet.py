@@ -6,18 +6,9 @@ from langchain_aws import ChatBedrockConverse
 from langfuse.decorators import observe
 from langfuse.callback import CallbackHandler
 
-def get_cors_headers():
-    return {
-        "Access-Control-Allow-Origin": os.environ["ALLOWED_ORIGIN"],
-        "Access-Control-Allow-Headers": "Content-Type,Authorization",
-        "Access-Control-Allow-Methods": "OPTIONS,POST",
-        "Access-Control-Allow-Credentials": "true"
-    }
-
 def create_response(status_code, message):
     return {
         "statusCode": status_code,
-        "headers": get_cors_headers(),
         "body": json.dumps(message)
     }
 
@@ -40,7 +31,7 @@ def lambda_handler(event, context):
         public_key=secret.get("LANGFUSE_PUBLIC_KEY"),
         host=os.environ["LANGFUSE_HOST"],
         user_id=event.get("userEmail"),
-        session_id=event.get("predefinedSessionId")
+        session_id=event.get("langfuseSessionId")
     )
 
     try:

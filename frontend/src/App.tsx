@@ -52,7 +52,7 @@ function App() {
       const bodyData = JSON.parse(data.body);
       setResponse(bodyData.message);
       setTraceId(bodyData.traceId);
-      setLangfuseSessionId(bodyData.predefinedSessionId);
+      setLangfuseSessionId(bodyData.langfuseSessionId);
     } catch (error) {
       setError('エラーが発生しました。ページを再読み込みして、もう一度お試しください。');
     } finally {

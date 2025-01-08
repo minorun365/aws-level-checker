@@ -6,18 +6,9 @@ from langchain_aws import ChatBedrockConverse
 from langfuse.decorators import observe
 from langfuse.callback import CallbackHandler
 
-def get_cors_headers():
-    return {
-        "Access-Control-Allow-Origin": os.environ["ALLOWED_ORIGIN"],
-        "Access-Control-Allow-Headers": "Content-Type,Authorization",
-        "Access-Control-Allow-Methods": "OPTIONS,POST",
-        "Access-Control-Allow-Credentials": "true"
-    }
-
 def create_response(status_code, message):
     return {
         "statusCode": status_code,
-        "headers": get_cors_headers(),
         "body": json.dumps(message)
     }
 
@@ -35,13 +26,13 @@ def lambda_handler(event, context):
         max_tokens=4096,
     )
 
-    predefined_session_id = str(uuid.uuid4())
+    langfuse_session_id = str(uuid.uuid4())
     langfuse_handler = CallbackHandler(
         secret_key=secret.get("LANGFUSE_SECRET_KEY"),
         public_key=secret.get("LANGFUSE_PUBLIC_KEY"),
         host=os.environ["LANGFUSE_HOST"],
         user_id=event.get("userEmail"),
-        session_id=predefined_session_id
+        session_id=langfuse_session_id
     )
 
     try:
@@ -80,7 +71,7 @@ Level 400 : 複数のサービス、アーキテクチャによる実装でテ�
         return create_response(200, {
             "message": output,
             "traceId": langfuse_handler.get_trace_id(),
-            "predefinedSessionId": predefined_session_id
+            "langfuseSessionId": langfuse_session_id
         })
 
     except Exception as e:
