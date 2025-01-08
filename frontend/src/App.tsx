@@ -125,7 +125,7 @@ function App() {
 
             <CardContent className="space-y-4">
               <p className="text-white">
-                あなたのアウトプットを以下に貼り付けてください。賢い生成AIがレベルを分析します。
+                あなたのアウトプットを以下に貼り付けてください。賢いAIがレベルを分析します。
               </p>
               <Textarea
                 value={blogContent}
@@ -240,7 +240,7 @@ function App() {
           </Card>
         </div>
         <div className="max-w-4xl mx-auto mt-4 text-gray-400 text-sm">
-          このアプリは <a href="https://x.com/minorun365" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">みのるん</a> が開発しました。
+          このアプリは <a href="https://x.com/minorun365" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">みのるん</a> が開発しています。
         </div>
       </div>
     );
