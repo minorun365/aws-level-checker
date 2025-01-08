@@ -197,7 +197,7 @@ function App() {
                           : 'bg-zinc-900 hover:bg-zinc-800 cursor-pointer'
                       } text-white font-medium flex items-center justify-center gap-2 py-2.5 rounded-lg border border-zinc-700 transition-all duration-200 shadow-sm`}
                     >
-                      {isPostLoading ? "ポスト文案を生成中⌛️ 10秒ちょい待ってね" : "Xでポストする"}
+                      {isPostLoading ? "ポストを生成中⌛️" : "Xでポストする"}
                     </a>
                     <div className="flex gap-2">
                       <Button
