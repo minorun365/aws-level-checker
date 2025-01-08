@@ -232,7 +232,7 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> LambdaResponse:
         langfuse_handler, langfuse = setup_langfuse(
             secret,
             event.get("userEmail"),
-            event.get("sessionId")
+            event.get("langfuseSessionId")
         )
         
         # ツイート生成
@@ -241,7 +241,7 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> LambdaResponse:
         
         return create_response(HttpStatus.OK, {
             "message": output,
-            "traceId": langfuse_handler.get_trace_id()
+            # "traceId": langfuse_handler.get_trace_id() 不要では？
         })
 
     except (EnvironmentError, SecretError, LangfuseError, TweetGenerationError) as e:
