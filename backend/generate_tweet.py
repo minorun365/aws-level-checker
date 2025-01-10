@@ -240,8 +240,7 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> LambdaResponse:
         langfuse_handler.flush()
         
         return create_response(HttpStatus.OK, {
-            "message": output,
-            # "traceId": langfuse_handler.get_trace_id() 不要では？
+            "message": output
         })
 
     except (EnvironmentError, SecretError, LangfuseError, TweetGenerationError) as e:
