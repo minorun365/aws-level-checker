@@ -4,13 +4,6 @@ Transform: AWS::Serverless-2016-10-31
 Description: AWS Level Checker Lambda関数の定義
 
 Parameters:
-  Environment:
-    Type: String
-    Default: dev
-    AllowedValues:
-      - dev
-      - prd
-    Description: 環境名（dev/prd）
   BedrockInferenceProfileArn:
     Type: String
     Description: Bedrock推論プロファイルのARN
