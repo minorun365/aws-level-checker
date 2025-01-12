@@ -1,9 +1,9 @@
-name: デプロイ（dev環境）
+name: デプロイ（prd環境）
 
 on:
   push:
     branches:
-      - dev
+      - prd
 
 permissions:
   id-token: write
@@ -36,7 +36,7 @@ jobs:
         
       - name: ビルド
         working-directory: ./frontend
-        run: npm run build:dev
+        run: npm run build:prd
         
       - name: S3へデプロイ
         run: |
