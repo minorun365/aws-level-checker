@@ -75,7 +75,6 @@ jobs:
         run: |
           sam deploy --config-env prd --no-confirm-changeset --no-fail-on-empty-changeset \
             --parameter-overrides \
-              Environment=prd \
               BedrockInferenceProfileArn=${{ vars.BEDROCK_INFERENCE_PROFILE_ARN }} \
               LangfuseHost=${{ vars.LANGFUSE_HOST }} \
               LangfuseSecretUrl=${{ vars.LANGFUSE_SECRET_URL }}
