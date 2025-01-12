@@ -1,0 +1,93 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Description: AWS Level Checker Lambda関数の定義
+
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+    AllowedValues:
+      - dev
+      - prd
+    Description: 環境名（dev/prd）
+  BedrockInferenceProfileArn:
+    Type: String
+    Description: Bedrock推論プロファイルのARN
+  LangfuseHost:
+    Type: String
+    Description: LangfuseのホストURL
+  LangfuseSecretUrl:
+    Type: String
+    Description: AWS Secrets ManagerのLangfuse用エンドポイントURL
+
+# 共通設定
+Globals:
+  Function:
+    Runtime: python3.9
+    MemorySize: 128
+    Timeout: 30
+    # Lambdaレイヤーの設定
+    Layers:
+      - arn:aws:lambda:us-east-1:715841358122:layer:langfuse:5
+      - arn:aws:lambda:us-east-1:177933569100:layer:AWS-Parameters-and-Secrets-Lambda-Extension:12
+    # 環境変数の設定
+    Environment:
+      Variables:
+        ENV: !Ref Environment
+        BEDROCK_INFERENCE_PROFILE_ARN: !Ref BedrockInferenceProfileArn
+        LANGFUSE_HOST: !Ref LangfuseHost
+        LANGFUSE_SECRET_URL: !Ref LangfuseSecretUrl
+
+Resources:
+  # 評価出力用Lambda関数
+  EvaluateOutputFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: evaluate_output/
+      Handler: lambda_function.lambda_handler
+      Description: Bedrockの出力を評価するLambda関数
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - bedrock:*
+              Resource: '*'
+            - Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue
+                - secretsmanager:PutSecretValue
+              Resource: '*'
+
+  # ツイート生成用Lambda関数
+  GenerateTweetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: generate_tweet/
+      Handler: lambda_function.lambda_handler
+      Description: Bedrockを使用してツイートを生成するLambda関数
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - bedrock:*
+              Resource: '*'
+            - Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue
+                - secretsmanager:PutSecretValue
+              Resource: '*'
+
+# 出力値の定義
+Outputs:
+  EvaluateOutputFunctionArn:
+    Description: 評価出力Lambda関数のARN
+    Value: !GetAtt EvaluateOutputFunction.Arn
+
+  GenerateTweetFunctionArn:
+    Description: ツイート生成Lambda関数のARN
+    Value: !GetAtt GenerateTweetFunction.Arn
