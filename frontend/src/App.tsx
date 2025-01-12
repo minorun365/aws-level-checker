@@ -153,7 +153,7 @@ function App() {
         onClick={auth.signIn}
         className="w-full bg-blue-600 hover:bg-blue-700 text-white"
       >
-        サインインしてはじめよう！
+        サインインしてはじめよう！ dev-test
       </Button>
     </div>
   );
