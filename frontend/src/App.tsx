@@ -24,7 +24,7 @@ function App() {
     setProgress(0);
     setError('');
 
-    // プログレスバーを95%まで15秒かけて進める
+    // プログレスバーを95%まで12秒かけて進める
     const interval = setInterval(() => {
       setProgress(prev => {
         if (prev >= 95) {
@@ -33,7 +33,7 @@ function App() {
         }
         return prev + 1;
       });
-    }, 150); // 15秒で95%まで進むように150msごとに1%進める
+    }, 120); // 12秒で95%まで進むように120msごとに1%進める
   
     try {
       const data = await ApiService.checkContent(
