@@ -24,7 +24,7 @@ export function ShareButton({
     setIsLoading(true);
     setProgress(0);
 
-    // プログレスバーを95%まで10秒かけて進める
+    // プログレスバーを95%まで8秒かけて進める
     const interval = setInterval(() => {
       setProgress(prev => {
         if (prev >= 95) {
@@ -33,7 +33,7 @@ export function ShareButton({
         }
         return prev + 1;
       });
-    }, 100); // 10秒で95%まで進むように100msごとに1%進める
+    }, 80); // 8秒で95%まで進むように80msごとに1%進める
     try {
       const data = await ApiService.generateTweet(
         {
