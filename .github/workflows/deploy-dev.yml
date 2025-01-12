@@ -40,6 +40,7 @@ jobs:
         
       - name: Deploy to S3
         run: |
+          echo ${{ env.S3_BUCKET_NAME }}
           aws s3 sync ./frontend/dist/ s3://${{ env.S3_BUCKET_NAME }}/ --delete
           
       - name: Invalidate CloudFront
