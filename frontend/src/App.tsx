@@ -24,6 +24,8 @@ function App() {
   const startTweetProgress = () => {
     setTweetProgress(0);
     setIsTweetLoading(true);
+
+    // プログレスバーを95%まで8秒かけて進める
     const interval = setInterval(() => {
       setTweetProgress(prev => {
         if (prev >= 95) {
@@ -32,7 +34,7 @@ function App() {
         }
         return prev + 1;
       });
-    }, 60);
+    }, 80); // 8秒で95%まで進むように80msごとに1%進める
     return interval;
   };
 
