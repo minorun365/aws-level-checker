@@ -55,7 +55,7 @@ export function ShareButton({
   };
 
   return (
-    <div className="flex-1">
+    <div className="w-full">
       <a
         onClick={handleShare}
         className={`block ${
