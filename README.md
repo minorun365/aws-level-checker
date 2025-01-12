@@ -11,6 +11,7 @@ https://checker.minoruonda.com/
 
 ![アーキテクチャ図](https://github.com/user-attachments/assets/3de3251f-d929-4ee5-b62f-5a8ae06739d9)
 
+
 ## デプロイ方法
 
 1. AWSインフラ一式を構築する
