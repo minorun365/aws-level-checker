@@ -3,7 +3,7 @@ name: デプロイ（prd環境）
 on:
   push:
     branches:
-      - prd
+      - main
 
 permissions:
   id-token: write
