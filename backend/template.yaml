@@ -27,7 +27,6 @@ Globals:
     # 環境変数の設定
     Environment:
       Variables:
-        ENV: !Ref Environment
         BEDROCK_INFERENCE_PROFILE_ARN: !Ref BedrockInferenceProfileArn
         LANGFUSE_HOST: !Ref LangfuseHost
         LANGFUSE_SECRET_URL: !Ref LangfuseSecretUrl
