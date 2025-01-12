@@ -105,7 +105,7 @@ def get_secrets() -> SecretConfig:
         secrets_response = requests.get(secrets_extension_endpoint, headers=headers)
         
         if secrets_response.status_code != HttpStatus.OK:
-            raise SecretError(f"シークレット取得APIが失敗しました。: {secrets_response.status_code} 再実行してみてください🙏")
+            raise SecretError(f"シークレット取得APIが失敗しました。: {secrets_response.status_code} （再実行してみてください🙏）")
             
         secret = json.loads(secrets_response.text)["SecretString"]
         
