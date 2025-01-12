@@ -55,16 +55,16 @@ export function ShareButton({
   };
 
   return (
-    <div className="w-full">
+    <div className="flex-grow">
       <a
         onClick={handleShare}
-        className={`block ${
+        className={`block w-full ${
         isLoading 
           ? 'bg-zinc-700 cursor-not-allowed'
           : 'bg-zinc-900 hover:bg-zinc-800 cursor-pointer'
-      } text-white font-medium flex items-center justify-center gap-2 py-2.5 rounded-lg border border-zinc-700 transition-all duration-200 shadow-sm`}
-    >
-      {isLoading ? "️⌛️ ポストを生成中…" : "Xでポストする"}
+      } text-white font-medium text-center py-2.5 rounded-lg border border-zinc-700 transition-all duration-200 shadow-sm`}
+      >
+        {isLoading ? "️⌛️ ポストを生成中…" : "Xでポストする"}
       </a>
       {isLoading && (
         <Progress value={progress} className="w-full mt-4" />
