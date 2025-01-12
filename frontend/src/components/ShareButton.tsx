@@ -24,16 +24,16 @@ export function ShareButton({
     setIsLoading(true);
     setProgress(0);
 
-    // プログレスバーを90%まで8秒かけて進める
+    // プログレスバーを95%まで12秒かけて進める
     const interval = setInterval(() => {
       setProgress(prev => {
-        if (prev >= 90) {
+        if (prev >= 95) {
           clearInterval(interval);
-          return 90;
+          return 95;
         }
         return prev + 1;
       });
-    }, 80); // 8秒で90%まで進むように80msごとに1%進める
+    }, 120); // 12秒で95%まで進むように120msごとに1%進める
     try {
       const data = await ApiService.generateTweet(
         {
@@ -67,7 +67,7 @@ export function ShareButton({
           : 'bg-zinc-900 hover:bg-zinc-800 cursor-pointer'
       } text-white font-medium flex items-center justify-center gap-2 py-2.5 rounded-lg border border-zinc-700 transition-all duration-200 shadow-sm`}
     >
-      {isLoading ? "ポストを生成中⌛️" : "Xでポストする"}
+      {isLoading ? "️⌛️ ポストを生成中…" : "Xでポストする"}
       </a>
     </div>
   );

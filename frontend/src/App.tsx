@@ -24,16 +24,16 @@ function App() {
     setProgress(0);
     setError('');
 
-    // プログレスバーを90%まで10秒かけて進める
+    // プログレスバーを95%まで15秒かけて進める
     const interval = setInterval(() => {
       setProgress(prev => {
-        if (prev >= 90) {
+        if (prev >= 95) {
           clearInterval(interval);
-          return 90;
+          return 95;
         }
         return prev + 1;
       });
-    }, 100); // 10秒で90%まで進むように100msごとに1%進める
+    }, 150); // 15秒で95%まで進むように150msごとに1%進める
   
     try {
       const data = await ApiService.checkContent(
@@ -133,7 +133,7 @@ function App() {
               disabled={isLoading}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white"
             >
-              {isLoading ? "分析中⌛️ 10秒ちょい待ってね" : "Amazon Bedrockに判定してもらう！"}
+              {isLoading ? "⌛️ 分析中…" : "Amazon Bedrockに判定してもらう！"}
             </Button>
 
             {error && (
