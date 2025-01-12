@@ -73,7 +73,7 @@ jobs:
       - name: SAMデプロイ
         working-directory: ./backend
         run: |
-          sam deploy --no-confirm-changeset --no-fail-on-empty-changeset \
+          sam deploy --config-env prd --no-confirm-changeset --no-fail-on-empty-changeset \
             --parameter-overrides \
               Environment=prd \
               BedrockInferenceProfileArn=${{ vars.BEDROCK_INFERENCE_PROFILE_ARN }} \
