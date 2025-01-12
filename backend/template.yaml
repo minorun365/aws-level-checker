@@ -46,7 +46,7 @@ Resources:
     Properties:
       CodeUri: evaluate_output/
       Handler: lambda_function.lambda_handler
-      Description: Bedrockの出力を評価するLambda関数
+      Description: ユーザーのAWSアウトプットをレベル判定するLambda関数
       Policies:
         - AWSLambdaBasicExecutionRole
         - Version: '2012-10-17'
@@ -67,7 +67,7 @@ Resources:
     Properties:
       CodeUri: generate_tweet/
       Handler: lambda_function.lambda_handler
-      Description: Bedrockを使用してツイートを生成するLambda関数
+      Description: アウトプット判定結果をサマリーしてツイートを生成するLambda関数
       Policies:
         - AWSLambdaBasicExecutionRole
         - Version: '2012-10-17'
