@@ -149,25 +149,27 @@ function App() {
 
   const renderUnauthenticatedContent = () => (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 p-4">
-      <Card className="bg-gray-800 border-gray-700">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold text-white">
-            # AWSレベル判定くん
-          </CardTitle>
-        </CardHeader>
+      <div className="max-w-4xl mx-auto space-y-4">
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold text-white">
+              # AWSレベル判定くん
+            </CardTitle>
+          </CardHeader>
 
-        <CardContent className="space-y-4">
-          <p className="text-white">
-            あなたのアウトプットを以下に貼り付けてください。賢いAIがレベルを分析します。
-          </p>
-          <Button
-            onClick={auth.signIn}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-          >
-            サインインしてはじめよう！
-          </Button>
-        </CardContent>
-      </Card>
+          <CardContent className="space-y-4">
+            <p className="text-white">
+              あなたのアウトプットを以下に貼り付けてください。賢いAIがレベルを分析します。
+            </p>
+            <Button
+              onClick={auth.signIn}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              サインインしてはじめよう！
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 
