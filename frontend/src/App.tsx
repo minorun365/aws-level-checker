@@ -25,16 +25,16 @@ function App() {
     setTweetProgress(0);
     setIsTweetLoading(true);
 
-    // プログレスバーを95%まで8秒かけて進める
+    // プログレスバーを100%まで10秒かけて進める
     const interval = setInterval(() => {
       setTweetProgress(prev => {
-        if (prev >= 95) {
+        if (prev >= 100) {
           clearInterval(interval);
-          return 95;
+          return 100;
         }
         return prev + 1;
       });
-    }, 80); // 8秒で95%まで進むように80msごとに1%進める
+    }, 100); // 10秒で100%まで進むように100msごとに1%進める
     return interval;
   };
 
@@ -48,16 +48,16 @@ function App() {
     setProgress(0);
     setError('');
 
-    // プログレスバーを95%まで12秒かけて進める
+    // プログレスバーを100%まで12秒かけて進める
     const interval = setInterval(() => {
       setProgress(prev => {
-        if (prev >= 95) {
+        if (prev >= 100) {
           clearInterval(interval);
-          return 95;
+          return 100;
         }
         return prev + 1;
       });
-    }, 120); // 12秒で95%まで進むように120msごとに1%進める
+    }, 120); // 12秒で100%まで進むように120msごとに1%進める
   
     try {
       const data = await ApiService.checkContent(
