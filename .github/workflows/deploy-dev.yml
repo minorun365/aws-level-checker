@@ -18,31 +18,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Setup Node.js
+      - name: Node.jsのセットアップ
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           
-      - name: Configure AWS Credentials
+      - name: AWS認証情報の設定
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.IAM_ROLE_ARN }}
           aws-region: us-east-1
           role-session-name: GitHubActionsSession
           
-      - name: Install Dependencies
+      - name: 依存ライブラリのインストール
         working-directory: ./frontend
         run: npm install
         
-      - name: Build
+      - name: ビルド
         working-directory: ./frontend
         run: npm run build:dev
         
-      - name: Deploy to S3
+      - name: S3へデプロイ
         run: |
-          echo ${{ vars.S3_BUCKET_NAME }}
           aws s3 sync ./frontend/dist/ s3://${{ vars.S3_BUCKET_NAME }}/ --delete
           
-      - name: Invalidate CloudFront
+      - name: CloudFrontのキャッシュ削除
         run: |
           aws cloudfront create-invalidation --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
