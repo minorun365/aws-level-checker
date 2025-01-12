@@ -159,7 +159,7 @@ function App() {
 
           <CardContent className="space-y-4">
             <p className="text-white">
-              あなたのアウトプットを以下に貼り付けてください。賢いAIがレベルを分析します。
+              メールアドレスを登録すれば、誰でも使えます！
             </p>
             <Button
               onClick={auth.signIn}
@@ -169,6 +169,9 @@ function App() {
             </Button>
           </CardContent>
         </Card>
+      </div>
+      <div className="max-w-4xl mx-auto mt-4 text-gray-400 text-sm">
+        このアプリは <a href="https://x.com/minorun365" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">みのるん</a> が開発しています。
       </div>
     </div>
   );
