@@ -17,3 +17,5 @@ https://checker.minoruonda.com/
 2. ビルド： `frontend` ディレクトリで `npm run build:{dev|prd}` を実行する
 3. デプロイ： `aws s3 sync dist/ s3://{バケット名} --delete` を実行する
 4. キャッシュクリア： `aws cloudfront create-invalidation --distribution-id {ディストリビューションID}} --paths "/*"` を実行する``
+
+※GitHub Actionsの利用を推奨
