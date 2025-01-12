@@ -1,0 +1,94 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: AWS Level Checker Lambda Functions
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+    AllowedValues:
+    - dev
+    - prd
+    Description: Environment name
+  BedrockInferenceProfileArn:
+    Type: String
+    Description: ARN for Bedrock inference profile
+  LangfuseHost:
+    Type: String
+    Description: Langfuse host URL
+  LangfuseSecretUrl:
+    Type: String
+    Description: Langfuse secret URL for AWS Secrets Manager
+Globals:
+  Function:
+    Runtime: python3.9
+    MemorySize: 128
+    Timeout: 30
+    Layers:
+    - arn:aws:lambda:us-east-1:715841358122:layer:langfuse:5
+    - arn:aws:lambda:us-east-1:177933569100:layer:AWS-Parameters-and-Secrets-Lambda-Extension:12
+    Environment:
+      Variables:
+        ENV:
+          Ref: Environment
+        BEDROCK_INFERENCE_PROFILE_ARN:
+          Ref: BedrockInferenceProfileArn
+        LANGFUSE_HOST:
+          Ref: LangfuseHost
+        LANGFUSE_SECRET_URL:
+          Ref: LangfuseSecretUrl
+Resources:
+  EvaluateOutputFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: EvaluateOutputFunction
+      Handler: lambda_function.lambda_handler
+      Description: Evaluates the output from Bedrock
+      Policies:
+      - AWSLambdaBasicExecutionRole
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - bedrock:*
+          Resource: '*'
+        - Effect: Allow
+          Action:
+          - secretsmanager:GetSecretValue
+          - secretsmanager:PutSecretValue
+          Resource: '*'
+    Metadata:
+      SamResourceId: EvaluateOutputFunction
+  GenerateTweetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GenerateTweetFunction
+      Handler: lambda_function.lambda_handler
+      Description: Generates tweet using Bedrock
+      Policies:
+      - AWSLambdaBasicExecutionRole
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - bedrock:*
+          Resource: '*'
+        - Effect: Allow
+          Action:
+          - secretsmanager:GetSecretValue
+          - secretsmanager:PutSecretValue
+          Resource: '*'
+    Metadata:
+      SamResourceId: GenerateTweetFunction
+Outputs:
+  EvaluateOutputFunctionArn:
+    Description: ARN of the Evaluate Output Lambda function
+    Value:
+      Fn::GetAtt:
+      - EvaluateOutputFunction
+      - Arn
+  GenerateTweetFunctionArn:
+    Description: ARN of the Generate Tweet Lambda function
+    Value:
+      Fn::GetAtt:
+      - GenerateTweetFunction
+      - Arn
