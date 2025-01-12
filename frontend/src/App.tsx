@@ -16,24 +16,48 @@ function App() {
   const [error, setError] = useState('');
   const [traceId, setTraceId] = useState('');
   const [langfuseSessionId, setLangfuseSessionId] = useState<string>('');
+  const [tweetProgress, setTweetProgress] = useState(0);
+  const [isTweetLoading, setIsTweetLoading] = useState(false);
 
   const auth = useCustomAuth();
+
+  const startTweetProgress = () => {
+    setTweetProgress(0);
+    setIsTweetLoading(true);
+
+    // プログレスバーを95%まで8秒かけて進める
+    const interval = setInterval(() => {
+      setTweetProgress(prev => {
+        if (prev >= 95) {
+          clearInterval(interval);
+          return 95;
+        }
+        return prev + 1;
+      });
+    }, 80); // 8秒で95%まで進むように80msごとに1%進める
+    return interval;
+  };
+
+  const stopTweetProgress = () => {
+    setTweetProgress(100);
+    setIsTweetLoading(false);
+  };
 
   const invokeBedrock = async () => {
     setIsLoading(true);
     setProgress(0);
     setError('');
 
-    // プログレスバーを90%まで10秒かけて進める
+    // プログレスバーを95%まで12秒かけて進める
     const interval = setInterval(() => {
       setProgress(prev => {
-        if (prev >= 90) {
+        if (prev >= 95) {
           clearInterval(interval);
-          return 90;
+          return 95;
         }
         return prev + 1;
       });
-    }, 100); // 10秒で90%まで進むように100msごとに1%進める
+    }, 120); // 12秒で95%まで進むように120msごとに1%進める
   
     try {
       const data = await ApiService.checkContent(
@@ -73,7 +97,7 @@ function App() {
         </Card>
       </div>
       <div className="max-w-4xl mx-auto mt-4 text-gray-400 text-sm">
-        このアプリは <a href="https://x.com/minorun365" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">みのるん</a> が開発しています。
+        このアプリは <a href="https://x.com/minorun365" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">みのるん</a> が開発しています。（最後のデプロイ：{__DEPLOY_TIME__}）
       </div>
     </div>
   );
@@ -125,16 +149,18 @@ function App() {
               className="min-h-[200px] bg-gray-700 text-white border-gray-600 placeholder:text-gray-300"
             />
 
-            {isLoading && (
-              <Progress value={progress} className="w-full" />
-            )}
-            <Button
-              onClick={invokeBedrock}
-              disabled={isLoading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              {isLoading ? "分析中⌛️ 10秒ちょい待ってね" : "Amazon Bedrockに判定してもらう！"}
-            </Button>
+            <div className="w-full">
+              <Button
+                onClick={invokeBedrock}
+                disabled={isLoading}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                {isLoading ? "⌛️ 分析中…" : "Amazon Bedrockに判定してもらう！"}
+              </Button>
+              {isLoading && (
+                <Progress value={progress} className="w-full mt-4" />
+              )}
+            </div>
 
             {error && (
               <p className="text-pink-500">
@@ -151,15 +177,22 @@ function App() {
                     </p>
                   ))}
                 </CardContent>
-                <div className="px-4 pb-4 flex gap-2">
-                  <ShareButton
-                    response={response}
-                    userEmail={auth.user?.profile?.email}
-                    langfuseSessionId={langfuseSessionId}
-                    idToken={auth.user?.id_token || ''}
-                    onError={setError}
-                  />
-                  <FeedbackButtons traceId={traceId} />
+                <div className="p-4">
+                  <div className="flex gap-2">
+                    <ShareButton
+                      response={response}
+                      userEmail={auth.user?.profile?.email}
+                      langfuseSessionId={langfuseSessionId}
+                      idToken={auth.user?.id_token || ''}
+                      onError={setError}
+                      onLoadingStart={startTweetProgress}
+                      onLoadingEnd={stopTweetProgress}
+                    />
+                    <FeedbackButtons traceId={traceId} />
+                  </div>
+                  {isTweetLoading && (
+                    <Progress value={tweetProgress} className="w-full mt-4" />
+                  )}
                 </div>
               </Card>
             )}
@@ -177,7 +210,7 @@ function App() {
         </Card>
       </div>
       <div className="max-w-4xl mx-auto mt-4 text-gray-400 text-sm">
-        このアプリは <a href="https://x.com/minorun365" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">みのるん</a> が開発しています。
+        このアプリは <a href="https://x.com/minorun365" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">みのるん</a> が開発しています。（最後のデプロイ：{__DEPLOY_TIME__}）
       </div>
     </div>
   );
@@ -206,7 +239,7 @@ function App() {
         </Card>
       </div>
       <div className="max-w-4xl mx-auto mt-4 text-gray-400 text-sm">
-        このアプリは <a href="https://x.com/minorun365" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">みのるん</a> が開発しています。
+        このアプリは <a href="https://x.com/minorun365" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">みのるん</a> が開発しています。（最後のデプロイ：{__DEPLOY_TIME__}）
       </div>
     </div>
   );

@@ -29,7 +29,7 @@ export function FeedbackButtons({ traceId }: FeedbackButtonsProps) {
       <Button
         onClick={() => handleFeedback(1)}
         disabled={feedback !== null}
-        className={`mt-4 ${
+        className={`${
           feedback === null 
             ? 'bg-gray-500 hover:bg-gray-600' 
             : 'bg-gray-800 cursor-not-allowed'
@@ -40,7 +40,7 @@ export function FeedbackButtons({ traceId }: FeedbackButtonsProps) {
       <Button
         onClick={() => handleFeedback(0)}
         disabled={feedback !== null}
-        className={`mt-4 ${
+        className={`${
           feedback === null 
             ? 'bg-gray-500 hover:bg-gray-600' 
             : 'bg-gray-800 cursor-not-allowed'
