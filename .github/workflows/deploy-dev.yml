@@ -12,7 +12,8 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: dev
+    environment: 
+      name: dev
     
     steps:
       - uses: actions/checkout@v4
@@ -39,9 +40,9 @@ jobs:
         
       - name: Deploy to S3
         run: |
-          echo ${{ env.S3_BUCKET_NAME }}
-          aws s3 sync ./frontend/dist/ s3://${{ env.S3_BUCKET_NAME }}/ --delete
+          echo ${{ vars.S3_BUCKET_NAME }}
+          aws s3 sync ./frontend/dist/ s3://${{ vars.S3_BUCKET_NAME }}/ --delete
           
       - name: Invalidate CloudFront
         run: |
-          aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+          aws cloudfront create-invalidation --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
