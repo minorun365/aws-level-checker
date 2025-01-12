@@ -73,7 +73,7 @@ function App() {
         </Card>
       </div>
       <div className="max-w-4xl mx-auto mt-4 text-gray-400 text-sm">
-        このアプリは <a href="https://x.com/minorun365" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">みのるん</a> が開発しています。
+        このアプリは <a href="https://x.com/minorun365" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">みのるん</a> が開発しています。（最後のデプロイ：{__DEPLOY_TIME__}）
       </div>
     </div>
   );
@@ -177,7 +177,7 @@ function App() {
         </Card>
       </div>
       <div className="max-w-4xl mx-auto mt-4 text-gray-400 text-sm">
-        このアプリは <a href="https://x.com/minorun365" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">みのるん</a> が開発しています。
+        このアプリは <a href="https://x.com/minorun365" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">みのるん</a> が開発しています。（最後のデプロイ：{__DEPLOY_TIME__}）
       </div>
     </div>
   );
@@ -206,7 +206,7 @@ function App() {
         </Card>
       </div>
       <div className="max-w-4xl mx-auto mt-4 text-gray-400 text-sm">
-        このアプリは <a href="https://x.com/minorun365" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">みのるん</a> が開発しています。
+        このアプリは <a href="https://x.com/minorun365" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">みのるん</a> が開発しています。（最後のデプロイ：{__DEPLOY_TIME__}）
       </div>
     </div>
   );
