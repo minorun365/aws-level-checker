@@ -1,0 +1,19 @@
+version = 0.1
+
+[dev.deploy.parameters]
+stack_name = "aws-level-checker-dev"
+resolve_s3 = true
+s3_prefix = "aws-level-checker-dev"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "Environment=\"dev\""
+image_repositories = []
+
+[prd.deploy.parameters]
+stack_name = "aws-level-checker-prd"
+resolve_s3 = true
+s3_prefix = "aws-level-checker-prd"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "Environment=\"prd\""
+image_repositories = []

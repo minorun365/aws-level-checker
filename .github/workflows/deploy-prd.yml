@@ -54,3 +54,27 @@ jobs:
       - name: CloudFrontのキャッシュ削除
         run: |
           aws cloudfront create-invalidation --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+
+      # バックエンドのデプロイ
+      - name: Python 3.9のセットアップ
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: SAM CLIのインストール
+        uses: aws-actions/setup-sam@v2
+        with:
+          use-installer: true
+
+      - name: SAMビルド
+        working-directory: ./backend
+        run: sam build
+
+      - name: SAMデプロイ
+        working-directory: ./backend
+        run: |
+          sam deploy --config-env prd --no-confirm-changeset --no-fail-on-empty-changeset \
+            --parameter-overrides \
+              BedrockInferenceProfileArn=${{ vars.BEDROCK_INFERENCE_PROFILE_ARN }} \
+              LangfuseHost=${{ vars.LANGFUSE_HOST }} \
+              LangfuseSecretUrl=${{ vars.LANGFUSE_SECRET_URL }}

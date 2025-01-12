@@ -1,0 +1,11 @@
+# SAMのビルド成果物
+.aws-sam
+
+# SAMの設定ファイル
+samconfig.toml
+
+# 環境変数ファイル（実際の値）
+env.*.json
+
+# 例示用ファイルは除外しない
+!env.*.example.json
