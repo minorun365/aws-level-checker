@@ -52,7 +52,7 @@ function App() {
 
           <CardContent className="space-y-4">
             <p className="text-white">
-              認証中です…⌛️
+            ⌛️ 認証中です…
             </p>
           </CardContent>
         </Card>
