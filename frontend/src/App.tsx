@@ -125,9 +125,6 @@ function App() {
               className="min-h-[200px] bg-gray-700 text-white border-gray-600 placeholder:text-gray-300"
             />
 
-            {isLoading && (
-              <Progress value={progress} className="w-full" />
-            )}
             <Button
               onClick={invokeBedrock}
               disabled={isLoading}
@@ -135,6 +132,9 @@ function App() {
             >
               {isLoading ? "⌛️ 分析中…" : "Amazon Bedrockに判定してもらう！"}
             </Button>
+            {isLoading && (
+              <Progress value={progress} className="w-full mt-4" />
+            )}
 
             {error && (
               <p className="text-pink-500">

@@ -56,12 +56,9 @@ export function ShareButton({
 
   return (
     <div className="flex-1">
-      {isLoading && (
-        <Progress value={progress} className="mb-4" />
-      )}
       <a
         onClick={handleShare}
-        className={`block mt-4 ${
+        className={`block ${
         isLoading 
           ? 'bg-zinc-700 cursor-not-allowed'
           : 'bg-zinc-900 hover:bg-zinc-800 cursor-pointer'
@@ -69,6 +66,9 @@ export function ShareButton({
     >
       {isLoading ? "️⌛️ ポストを生成中…" : "Xでポストする"}
       </a>
+      {isLoading && (
+        <Progress value={progress} className="mt-4" />
+      )}
     </div>
   );
 }
