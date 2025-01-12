@@ -56,6 +56,11 @@ jobs:
           aws cloudfront create-invalidation --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
 
       # バックエンドのデプロイ
+      - name: Python 3.9のセットアップ
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
       - name: SAM CLIのインストール
         uses: aws-actions/setup-sam@v2
         with:
