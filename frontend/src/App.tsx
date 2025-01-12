@@ -41,8 +41,25 @@ function App() {
   };
 
   const renderAuthLoading = () => (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 p-4 text-white">
-      認証中です…🏃‍♂️
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 p-4">
+      <div className="max-w-4xl mx-auto space-y-4">
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold text-white">
+              # AWSレベル判定くん
+            </CardTitle>
+          </CardHeader>
+
+          <CardContent className="space-y-4">
+            <p className="text-white">
+              認証中です…⌛️
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+      <div className="max-w-4xl mx-auto mt-4 text-gray-400 text-sm">
+        このアプリは <a href="https://x.com/minorun365" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">みのるん</a> が開発しています。
+      </div>
     </div>
   );
 
@@ -159,7 +176,7 @@ function App() {
 
           <CardContent className="space-y-4">
             <p className="text-white">
-              メールアドレスを登録すれば、誰でも使えます！
+              あなたの技術アウトプットのAWSレベルを判定します。
             </p>
             <Button
               onClick={auth.signIn}
