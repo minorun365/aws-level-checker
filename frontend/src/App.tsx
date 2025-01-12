@@ -16,8 +16,30 @@ function App() {
   const [error, setError] = useState('');
   const [traceId, setTraceId] = useState('');
   const [langfuseSessionId, setLangfuseSessionId] = useState<string>('');
+  const [tweetProgress, setTweetProgress] = useState(0);
+  const [isTweetLoading, setIsTweetLoading] = useState(false);
 
   const auth = useCustomAuth();
+
+  const startTweetProgress = () => {
+    setTweetProgress(0);
+    setIsTweetLoading(true);
+    const interval = setInterval(() => {
+      setTweetProgress(prev => {
+        if (prev >= 95) {
+          clearInterval(interval);
+          return 95;
+        }
+        return prev + 1;
+      });
+    }, 60);
+    return interval;
+  };
+
+  const stopTweetProgress = () => {
+    setTweetProgress(100);
+    setIsTweetLoading(false);
+  };
 
   const invokeBedrock = async () => {
     setIsLoading(true);
@@ -153,7 +175,7 @@ function App() {
                     </p>
                   ))}
                 </CardContent>
-                <div className="p-4 space-y-4">
+                <div className="p-4">
                   <div className="flex gap-2">
                     <ShareButton
                       response={response}
@@ -161,9 +183,14 @@ function App() {
                       langfuseSessionId={langfuseSessionId}
                       idToken={auth.user?.id_token || ''}
                       onError={setError}
+                      onLoadingStart={startTweetProgress}
+                      onLoadingEnd={stopTweetProgress}
                     />
                     <FeedbackButtons traceId={traceId} />
                   </div>
+                  {isTweetLoading && (
+                    <Progress value={tweetProgress} className="w-full mt-4" />
+                  )}
                 </div>
               </Card>
             )}

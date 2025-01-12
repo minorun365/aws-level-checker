@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { ApiService } from '../services/api';
-import { Progress } from './ui/progress';
-
 interface ShareButtonProps {
   response: string;
   userEmail: string | undefined;
   langfuseSessionId: string;
   idToken: string;
   onError: (message: string) => void;
+  onLoadingStart: () => void;
+  onLoadingEnd: () => void;
 }
 
 export function ShareButton({
@@ -15,25 +15,15 @@ export function ShareButton({
   userEmail,
   langfuseSessionId,
   idToken,
-  onError
+  onError,
+  onLoadingStart,
+  onLoadingEnd
 }: ShareButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
 
   const handleShare = async () => {
     setIsLoading(true);
-    setProgress(0);
-
-    // プログレスバーを95%まで6秒かけて進める
-    const interval = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 95) {
-          clearInterval(interval);
-          return 95;
-        }
-        return prev + 1;
-      });
-    }, 60); // 6秒で95%まで進むように60msごとに1%進める
+    onLoadingStart();
     try {
       const data = await ApiService.generateTweet(
         {
@@ -49,26 +39,21 @@ export function ShareButton({
       console.error('ツイート生成エラー:', error);
       onError('ツイート生成中にエラーが発生しました。もう一度お試しください。');
     } finally {
-      setProgress(100);
+      onLoadingEnd();
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex-grow">
-      <a
-        onClick={handleShare}
-        className={`block w-full ${
-        isLoading 
-          ? 'bg-zinc-700 cursor-not-allowed'
-          : 'bg-zinc-900 hover:bg-zinc-800 cursor-pointer'
-      } text-white font-medium text-center py-2.5 rounded-lg border border-zinc-700 transition-all duration-200 shadow-sm`}
-      >
-        {isLoading ? "️⌛️ ポストを生成中…" : "Xでポストする"}
-      </a>
-      {isLoading && (
-        <Progress value={progress} className="w-full mt-4" />
-      )}
-    </div>
+    <a
+      onClick={handleShare}
+      className={`block w-full ${
+      isLoading 
+        ? 'bg-zinc-700 cursor-not-allowed'
+        : 'bg-zinc-900 hover:bg-zinc-800 cursor-pointer'
+    } text-white font-medium text-center py-2.5 rounded-lg border border-zinc-700 transition-all duration-200 shadow-sm`}
+    >
+      {isLoading ? "️⌛️ ポストを生成中…" : "Xでポストする"}
+    </a>
   );
 }
