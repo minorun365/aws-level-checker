@@ -125,16 +125,18 @@ function App() {
               className="min-h-[200px] bg-gray-700 text-white border-gray-600 placeholder:text-gray-300"
             />
 
-            <Button
-              onClick={invokeBedrock}
-              disabled={isLoading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              {isLoading ? "⌛️ 分析中…" : "Amazon Bedrockに判定してもらう！"}
-            </Button>
-            {isLoading && (
-              <Progress value={progress} className="w-full mt-4" />
-            )}
+            <div className="w-full">
+              <Button
+                onClick={invokeBedrock}
+                disabled={isLoading}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                {isLoading ? "⌛️ 分析中…" : "Amazon Bedrockに判定してもらう！"}
+              </Button>
+              {isLoading && (
+                <Progress value={progress} className="w-full mt-4" />
+              )}
+            </div>
 
             {error && (
               <p className="text-pink-500">
