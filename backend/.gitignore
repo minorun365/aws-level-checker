@@ -1,5 +1,5 @@
 # SAMのビルド成果物
-.aws-sam/
+.aws-sam
 
 # SAMの設定ファイル
 samconfig.toml
