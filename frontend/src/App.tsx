@@ -153,15 +153,21 @@ function App() {
                     </p>
                   ))}
                 </CardContent>
-                <div className="px-4 pb-4 flex gap-2">
-                  <ShareButton
-                    response={response}
-                    userEmail={auth.user?.profile?.email}
-                    langfuseSessionId={langfuseSessionId}
-                    idToken={auth.user?.id_token || ''}
-                    onError={setError}
-                  />
-                  <FeedbackButtons traceId={traceId} />
+                <div className="px-4 pb-4">
+                  <div className="flex items-start gap-2">
+                    <div className="flex-grow">
+                      <ShareButton
+                        response={response}
+                        userEmail={auth.user?.profile?.email}
+                        langfuseSessionId={langfuseSessionId}
+                        idToken={auth.user?.id_token || ''}
+                        onError={setError}
+                      />
+                    </div>
+                    <div className="flex-shrink-0">
+                      <FeedbackButtons traceId={traceId} />
+                    </div>
+                  </div>
                 </div>
               </Card>
             )}

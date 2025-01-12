@@ -67,7 +67,7 @@ export function ShareButton({
       {isLoading ? "️⌛️ ポストを生成中…" : "Xでポストする"}
       </a>
       {isLoading && (
-        <Progress value={progress} className="mt-4" />
+        <Progress value={progress} className="w-full mt-4" />
       )}
     </div>
   );
