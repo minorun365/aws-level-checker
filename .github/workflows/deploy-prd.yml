@@ -13,7 +13,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: 
-      name: dev
+      name: prd
     
     steps:
       - uses: actions/checkout@v4
