@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card"
 import { Button } from "./components/ui/button"
 import { Textarea } from "./components/ui/textarea"
+import { Progress } from "./components/ui/progress"
 import { FeedbackButtons } from "./components/FeedbackButtons"
 import { ShareButton } from "./components/ShareButton"
 import { ApiService } from "./services/api"
@@ -11,6 +12,7 @@ function App() {
   const [blogContent, setBlogContent] = useState('');
   const [response, setResponse] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [error, setError] = useState('');
   const [traceId, setTraceId] = useState('');
   const [langfuseSessionId, setLangfuseSessionId] = useState<string>('');
@@ -19,7 +21,19 @@ function App() {
 
   const invokeBedrock = async () => {
     setIsLoading(true);
+    setProgress(0);
     setError('');
+
+    // プログレスバーを90%まで10秒かけて進める
+    const interval = setInterval(() => {
+      setProgress(prev => {
+        if (prev >= 90) {
+          clearInterval(interval);
+          return 90;
+        }
+        return prev + 1;
+      });
+    }, 100); // 10秒で90%まで進むように100msごとに1%進める
   
     try {
       const data = await ApiService.checkContent(
@@ -36,6 +50,7 @@ function App() {
     } catch (error) {
       setError('エラーが発生しました。ページを再読み込みして、もう一度お試しください。');
     } finally {
+      setProgress(100);
       setIsLoading(false);
     }
   };
@@ -110,6 +125,9 @@ function App() {
               className="min-h-[200px] bg-gray-700 text-white border-gray-600 placeholder:text-gray-300"
             />
 
+            {isLoading && (
+              <Progress value={progress} className="w-full" />
+            )}
             <Button
               onClick={invokeBedrock}
               disabled={isLoading}
