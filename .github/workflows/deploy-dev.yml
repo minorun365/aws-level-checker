@@ -18,6 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
+      # フロントエンドのデプロイ
       - name: Node.jsのセットアップ
         uses: actions/setup-node@v4
         with:
@@ -78,3 +79,15 @@ jobs:
               BedrockInferenceProfileArn=${{ vars.BEDROCK_INFERENCE_PROFILE_ARN }} \
               LangfuseHost=${{ vars.LANGFUSE_HOST }} \
               LangfuseSecretUrl=${{ vars.LANGFUSE_SECRET_URL }}
+
+      # Langfuseプロンプトの更新
+      - name: Langfuseライブラリのインストール
+        run: pip install langfuse
+
+      - name: プロンプトの更新
+        working-directory: ./prompts
+        env:
+          LANGFUSE_PUBLIC_KEY: ${{ secrets.LANGFUSE_PUBLIC_KEY }}
+          LANGFUSE_SECRET_KEY: ${{ secrets.LANGFUSE_SECRET_KEY }}
+          LANGFUSE_HOST: ${{ vars.LANGFUSE_HOST }}
+        run: python update_prompts.py
