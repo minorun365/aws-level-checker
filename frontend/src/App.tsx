@@ -25,12 +25,12 @@ function App() {
     setTweetProgress(0);
     setIsTweetLoading(true);
 
-    // プログレスバーを100%まで10秒かけて進める
+    // プログレスバーを95%まで10秒かけて進める
     const interval = setInterval(() => {
       setTweetProgress(prev => {
-        if (prev >= 100) {
+        if (prev >= 95) {
           clearInterval(interval);
-          return 100;
+          return 95;
         }
         return prev + 1;
       });
@@ -48,12 +48,12 @@ function App() {
     setProgress(0);
     setError('');
 
-    // プログレスバーを100%まで12秒かけて進める
+    // プログレスバーを95%まで12秒かけて進める
     const interval = setInterval(() => {
       setProgress(prev => {
-        if (prev >= 100) {
+        if (prev >= 95) {
           clearInterval(interval);
-          return 100;
+          return 95;
         }
         return prev + 1;
       });
