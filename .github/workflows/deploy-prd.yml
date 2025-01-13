@@ -38,6 +38,7 @@ jobs:
       - name: ビルド
         working-directory: ./frontend
         env:
+          VITE_SITE_URL: ${{ vars.VITE_SITE_URL }}
           VITE_COGNITO_DOMAIN: ${{ vars.VITE_COGNITO_DOMAIN }}
           VITE_COGNITO_AUTHORITY: ${{ vars.VITE_COGNITO_AUTHORITY }}
           VITE_COGNITO_REDIRECT_URI: ${{ vars.VITE_COGNITO_REDIRECT_URI }}
