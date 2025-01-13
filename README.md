@@ -10,3 +10,7 @@ https://checker.minoruonda.com/
 ## アーキテクチャ
 
 ![アーキテクチャ図](https://github.com/user-attachments/assets/645ec273-560d-406d-9694-84c34a957e9d)
+
+## 紹介記事
+
+[あなたのブログのAWS技術レベルを判定するアプリ作りました！ - Qiita](https://qiita.com/minorun365/items/226867be3d122c2cfe4f)
