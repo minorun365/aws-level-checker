@@ -10,11 +10,3 @@ https://checker.minoruonda.com/
 ## アーキテクチャ
 
 ![アーキテクチャ図](https://github.com/user-attachments/assets/3de3251f-d929-4ee5-b62f-5a8ae06739d9)
-
-
-## デプロイ方法
-
-1. AWSインフラ一式を構築する
-2. ビルド： `frontend` ディレクトリで `npm run build:{dev|prd}` を実行する
-3. デプロイ： `aws s3 sync dist/ s3://{バケット名} --delete` を実行する
-4. キャッシュクリア： `aws cloudfront create-invalidation --distribution-id {ディストリビューションID}} --paths "/*"` を実行する``
