@@ -36,17 +36,6 @@ Globals:
         LANGFUSE_SECRET_URL: !Ref LangfuseSecretUrl
 
 Resources:
-  # PDFアップロード用S3バケット
-  UploadBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: !Ref S3BucketName
-      LifecycleConfiguration:
-        Rules:
-          - Id: DeleteOldFiles
-            Status: Enabled
-            ExpirationInDays: 1  # アップロードされたファイルを1日後に削除
-
   # PDFドキュメント処理用Lambda関数
   LoadDocumentFunction:
     Type: AWS::Serverless::Function
@@ -69,7 +58,7 @@ Resources:
               Action:
                 - s3:PutObject
                 - s3:GetObject
-              Resource: !Sub '${UploadBucket.Arn}/*'
+              Resource: !Sub 'arn:aws:s3:::${S3BucketName}/*'
 
   # 評価出力用Lambda関数
   EvaluateOutputFunction:
