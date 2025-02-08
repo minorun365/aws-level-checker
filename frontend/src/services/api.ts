@@ -85,7 +85,7 @@ export class ApiService {
     idToken: string
   ): Promise<UploadPdfResponse> {
     return this.makeRequest<UploadPdfResponse>(
-      `${config.apiEndpoint}/check`,
+      `${config.loadApiEndpoint}/check`,
       'POST',
       idToken,
       params
