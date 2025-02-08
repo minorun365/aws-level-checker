@@ -35,7 +35,6 @@ class HttpStatus:
 
 # 必要な環境変数のリスト
 REQUIRED_ENV_VARS = [
-    "AWS_REGION",
     "S3_BUCKET_NAME"
 ]
 
