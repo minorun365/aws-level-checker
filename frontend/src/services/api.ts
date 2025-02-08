@@ -1,5 +1,16 @@
 import { config } from '../config';
 
+interface UploadPdfRequest {
+  pdfBase64: string;
+  userEmail: string | undefined;
+}
+
+interface UploadPdfResponse {
+  message: string;
+  text: string;
+  objectKey: string;
+}
+
 interface CheckRequest {
   blogContent: string;
   userEmail: string | undefined;
@@ -63,6 +74,18 @@ export class ApiService {
   ): Promise<TweetResponse> {
     return this.makeRequest<TweetResponse>(
       `${config.tweetApiEndpoint}/check`,
+      'POST',
+      idToken,
+      params
+    );
+  }
+
+  static async uploadPdf(
+    params: UploadPdfRequest,
+    idToken: string
+  ): Promise<UploadPdfResponse> {
+    return this.makeRequest<UploadPdfResponse>(
+      `${config.loadApiEndpoint}/check`,
       'POST',
       idToken,
       params

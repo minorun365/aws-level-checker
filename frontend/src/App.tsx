@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card"
 import { Button } from "./components/ui/button"
 import { Textarea } from "./components/ui/textarea"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "./components/ui/tabs"
 import { Progress } from "./components/ui/progress"
 import { FeedbackButtons } from "./components/FeedbackButtons"
 import { ShareButton } from "./components/ShareButton"
@@ -8,8 +9,20 @@ import { ApiService } from "./services/api"
 import { useCustomAuth } from "./hooks/useAuth"
 import { useState } from 'react';
 
+// カスタムエラー型
+class AppError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'AppError';
+  }
+}
+
 function App() {
+  const [inputMode, setInputMode] = useState<'text' | 'pdf'>('text');
   const [blogContent, setBlogContent] = useState('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
   const [response, setResponse] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -43,6 +56,64 @@ function App() {
     setIsTweetLoading(false);
   };
 
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && file.type === 'application/pdf') {
+      setSelectedFile(file);
+      setError('');
+      try {
+        const text = await uploadPdf(file);
+        setBlogContent(text);
+      } catch (error) {
+        if (error instanceof AppError || error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError('PDFファイルのアップロードに失敗しました');
+        }
+        setSelectedFile(null);
+      }
+    } else {
+      setError('PDFファイルを選択してください');
+      setSelectedFile(null);
+    }
+  };
+
+  const uploadPdf = async (file: File): Promise<string> => {
+    setIsUploading(true);
+    setUploadProgress(0);
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        setUploadProgress(50); // ファイル読み込み完了
+        try {
+          const base64String = (reader.result as string).split(',')[1];
+          const data = await ApiService.uploadPdf(
+            {
+              pdfBase64: base64String,
+              userEmail: auth.user?.profile?.email
+            },
+            auth.user?.id_token || ''
+          );
+          setUploadProgress(100);
+          resolve(data.text);
+        } catch (error) {
+          if (error instanceof Error) {
+            reject(new AppError(error.message));
+          } else {
+            reject(new AppError('PDFファイルのアップロードに失敗しました'));
+          }
+        }
+      };
+      reader.onerror = () => {
+        setIsUploading(false);
+        reject(new AppError('ファイルの読み込みに失敗しました'));
+      };
+      reader.readAsDataURL(file);
+    }).finally(() => {
+      setIsUploading(false);
+    });
+  };
+
   const invokeBedrock = async () => {
     setIsLoading(true);
     setProgress(0);
@@ -60,9 +131,20 @@ function App() {
     }, 120); // 12秒で100%まで進むように120msごとに1%進める
   
     try {
+      let content = '';
+      
+      if (inputMode === 'pdf') {
+        if (!blogContent) {
+          throw new AppError('PDFファイルを選択してください');
+        }
+        content = blogContent;
+      } else {
+        content = blogContent;
+      }
+
       const data = await ApiService.checkContent(
         {
-          blogContent,
+          blogContent: content,
           userEmail: auth.user?.profile?.email
         },
         auth.user?.id_token || ''
@@ -72,7 +154,11 @@ function App() {
       setTraceId(data.traceId);
       setLangfuseSessionId(data.langfuseSessionId);
     } catch (error) {
-      setError('エラーが発生しました。ページを再読み込みして、もう一度お試しください。');
+      if (error instanceof AppError || error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('エラーが発生しました。ページを再読み込みして、もう一度お試しください。');
+      }
     } finally {
       setProgress(100);
       setIsLoading(false);
@@ -138,21 +224,70 @@ function App() {
           </CardHeader>
 
           <CardContent className="space-y-4">
-            <p className="text-white">
-              あなたのアウトプットを以下に貼り付けてください。賢いAIがレベルを分析します。
-            </p>
-            <Textarea
+            <div className="space-y-4">
+              <p className="text-white">
+                あなたのアウトプットを入力してください。賢いAIがレベルを分析します。
+              </p>
+              
+              <Tabs
+                value={inputMode}
+                onValueChange={(value) => {
+                  setInputMode(value as 'text' | 'pdf');
+                  setError('');
+                  setBlogContent('');
+                  setSelectedFile(null);
+                }}
+                className="w-full"
+              >
+                <TabsList className="w-full">
+                  <TabsTrigger value="text" className="flex-1">テキストを入力</TabsTrigger>
+                  <TabsTrigger value="pdf" className="flex-1">PDFをアップロード</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="text">
+                <Textarea
               value={blogContent}
               onChange={(e) => setBlogContent(e.target.value)}
               placeholder={`評価したいブログや登壇資料の内容を、テキスト形式でここにコピペしてね
 （URLを入れてもページを読みに行くことはできません）`}
               className="min-h-[200px] bg-gray-700 text-white border-gray-600 placeholder:text-gray-300"
-            />
+                />
+                </TabsContent>
+                <TabsContent value="pdf">
+                <div className="flex flex-col items-center justify-center w-full">
+                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-600 border-dashed rounded-lg cursor-pointer bg-gray-700 hover:bg-gray-600">
+                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                      <p className="mb-2 text-sm text-white">
+                        {selectedFile ? selectedFile.name : 'PDFファイルをドロップするか、クリックして選択'}
+                      </p>
+                      <p className="text-xs text-gray-400">
+                        PDF (最大10MB)
+                      </p>
+                    </div>
+                    <input
+                      type="file"
+                      className="hidden"
+                      accept="application/pdf"
+                      onChange={handleFileChange}
+                    />
+                  </label>
+                  {isUploading && (
+                    <div className="w-full mt-4">
+                      <div className="text-sm text-white mb-2 text-center">
+                        PDFファイルをアップロード中...
+                      </div>
+                      <Progress value={uploadProgress} />
+                    </div>
+                  )}
+                </div>
+                </TabsContent>
+              </Tabs>
+            </div>
 
             <div className="w-full">
               <Button
                 onClick={invokeBedrock}
-                disabled={isLoading}
+                disabled={isLoading || isUploading}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white"
               >
                 {isLoading ? "⌛️ 分析中…" : "Amazon Bedrockに判定してもらう！"}

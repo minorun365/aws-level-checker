@@ -4,6 +4,10 @@ Transform: AWS::Serverless-2016-10-31
 Description: AWS Level Checker Lambda関数の定義
 
 Parameters:
+  S3BucketName:
+    Type: String
+    Description: PDFファイルを保存するS3バケット名
+    Default: alc-uploaded-documents
   BedrockInferenceProfileArn:
     Type: String
     Description: Bedrock推論プロファイルのARN
@@ -32,6 +36,29 @@ Globals:
         LANGFUSE_SECRET_URL: !Ref LangfuseSecretUrl
 
 Resources:
+  # PDFドキュメント処理用Lambda関数
+  LoadDocumentFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: load_document/
+      Handler: lambda_function.lambda_handler
+      Description: アップロードされたPDFファイルを処理するLambda関数
+      Runtime: python3.9
+      MemorySize: 512    # PDFの処理に十分なメモリを確保
+      Timeout: 60        # PDFの処理に十分な時間を確保
+      Environment:
+        Variables:
+          S3_BUCKET_NAME: !Ref S3BucketName
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - s3:PutObject
+                - s3:GetObject
+              Resource: !Sub 'arn:aws:s3:::${S3BucketName}/*'
+
   # 評価出力用Lambda関数
   EvaluateOutputFunction:
     Type: AWS::Serverless::Function
@@ -76,6 +103,10 @@ Resources:
 
 # 出力値の定義
 Outputs:
+  LoadDocumentFunctionArn:
+    Description: PDFドキュメント処理Lambda関数のARN
+    Value: !GetAtt LoadDocumentFunction.Arn
+
   EvaluateOutputFunctionArn:
     Description: 評価出力Lambda関数のARN
     Value: !GetAtt EvaluateOutputFunction.Arn
