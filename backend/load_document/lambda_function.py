@@ -4,8 +4,8 @@ import base64
 import uuid
 from typing import Dict, Any, TypedDict
 import boto3
-from langchain_community.document_loaders import PyPDFLoader
-from tempfile import NamedTemporaryFile
+from pypdf import PdfReader
+from io import BytesIO
 
 # カスタム例外クラス
 class EnvironmentError(Exception):
@@ -108,23 +108,16 @@ def extract_text_from_pdf(pdf_content: bytes) -> str:
         PDFProcessError: PDFの処理に失敗した場合
     """
     try:
-        # 一時ファイルにPDFを保存
-        with NamedTemporaryFile(suffix=".pdf", delete=False) as temp_file:
-            temp_file.write(pdf_content)
-            temp_file_path = temp_file.name
-
-        try:
-            # PDFからテキストを抽出
-            loader = PyPDFLoader(temp_file_path)
-            pages = loader.load()
+        # BytesIOを使用してメモリ上でPDFを読み込む
+        pdf_file = BytesIO(pdf_content)
+        reader = PdfReader(pdf_file)
+        
+        # 全ページのテキストを結合
+        text = ""
+        for page in reader.pages:
+            text += page.extract_text() + "\n"
             
-            # 全ページのテキストを結合
-            text = "\n".join([page.page_content for page in pages])
-            
-            return text
-        finally:
-            # 一時ファイルを削除
-            os.unlink(temp_file_path)
+        return text.strip()
             
     except Exception as e:
         raise PDFProcessError(f"PDFからのテキスト抽出に失敗しました: {str(e)}")
