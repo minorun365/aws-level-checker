@@ -46,6 +46,7 @@ jobs:
           VITE_API_ENDPOINT: ${{ vars.VITE_API_ENDPOINT }}
           VITE_TWEET_API_ENDPOINT: ${{ vars.VITE_TWEET_API_ENDPOINT }}
           VITE_LOAD_API_ENDPOINT: ${{ vars.VITE_LOAD_API_ENDPOINT }}
+          VITE_LOAD_URL_API_ENDPOINT: ${{ vars.VITE_LOAD_URL_API_ENDPOINT }}
           VITE_COGNITO_CLIENT_ID: ${{ secrets.VITE_COGNITO_CLIENT_ID }}
           VITE_LANGFUSE_PUBLIC_KEY: ${{ secrets.VITE_LANGFUSE_PUBLIC_KEY }}
         run: npm run build:prd
