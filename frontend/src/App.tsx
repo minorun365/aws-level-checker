@@ -298,7 +298,7 @@ function App() {
                     <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-600 border-dashed rounded-lg cursor-pointer bg-gray-700 hover:bg-gray-600">
                       <div className="flex flex-col items-center justify-center pt-5 pb-6">
                         <p className="mb-2 text-sm text-white">
-                          {selectedFile ? selectedFile.name : 'PDFファイルをドロップするか、クリックして選択'}
+                          {selectedFile ? selectedFile.name : 'PDFファイルをドロップしてね'}
                         </p>
                         <p className="text-xs text-gray-400">
                           PDF (最大10MB)
