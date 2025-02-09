@@ -270,9 +270,9 @@ function App() {
                 className="w-full"
               >
                 <TabsList className="w-full">
-                  <TabsTrigger value="text" className="flex-1">テキストを入力</TabsTrigger>
-                  <TabsTrigger value="url" className="flex-1">URLを入力</TabsTrigger>
-                  <TabsTrigger value="pdf" className="flex-1">PDFをアップロード</TabsTrigger>
+                  <TabsTrigger value="text" className="flex-1">テキスト</TabsTrigger>
+                  <TabsTrigger value="url" className="flex-1">URL</TabsTrigger>
+                  <TabsTrigger value="pdf" className="flex-1">PDF</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="text">

@@ -87,6 +87,19 @@ Resources:
       CodeUri: generate_tweet/
       Handler: lambda_function.lambda_handler
       Description: アウトプット判定結果をサマリーしてツイートを生成するLambda関数
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - bedrock:*
+              Resource: '*'
+            - Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue
+                - secretsmanager:PutSecretValue
+              Resource: '*'
 
   # URL処理用Lambda関数
   LoadUrlFunction:
