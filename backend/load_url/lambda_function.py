@@ -73,8 +73,10 @@ def extract_text_from_url(url: str) -> str:
         
         # 行に分割して前後の空白を削除
         lines = (line.strip() for line in text.splitlines())
+
         # 複数行の見出しを1行ずつに分割
         chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+
         # 空行を削除して結合
         return ' '.join(chunk for chunk in chunks if chunk)
             
@@ -82,8 +84,6 @@ def extract_text_from_url(url: str) -> str:
         raise URLProcessError(f"URLからのテキスト抽出に失敗しました: {str(e)}")
 
 def lambda_handler(event: Dict[str, Any], context: Any) -> LambdaResponse:
-    # デバッグログ: イベント全体を出力
-    print("Event:", json.dumps(event, ensure_ascii=False))
     """
     Lambda関数のメインハンドラー
     
@@ -102,15 +102,8 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> LambdaResponse:
                 "message": "URLが入力されていないようです🤔"
             })
         
-        # デバッグログ: URLとメールアドレスを出力
-        print("URL:", url)
-        print("UserEmail:", event.get('userEmail'))
-        
         # テキスト抽出
         extracted_text = extract_text_from_url(url)
-        
-        # デバッグログ: 抽出されたテキストを出力
-        print("Extracted text:", extracted_text[:200] + "..." if len(extracted_text) > 200 else extracted_text)
         
         return create_response(HttpStatus.OK, {
             "message": extracted_text if extracted_text.strip() else "テキストを抽出できませんでした。URLを確認してください。"
