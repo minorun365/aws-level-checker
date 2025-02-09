@@ -256,7 +256,7 @@ function App() {
           <CardContent className="space-y-4">
             <div className="space-y-4">
               <p className="text-white">
-                あなたのアウトプットを入力してください。賢いAIがレベルを分析します。
+                あなたの技術アウトプットを入力してください。賢いAIがレベルを分析します。
               </p>
               
               <Tabs
