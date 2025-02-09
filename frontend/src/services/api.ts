@@ -32,6 +32,15 @@ interface TweetResponse {
   message: string;
 }
 
+interface LoadUrlRequest {
+  url: string;
+  userEmail: string | undefined;
+}
+
+interface LoadUrlResponse {
+  text: string;
+}
+
 export class ApiService {
   private static async makeRequest<T>(
     endpoint: string,
@@ -86,6 +95,18 @@ export class ApiService {
   ): Promise<UploadPdfResponse> {
     return this.makeRequest<UploadPdfResponse>(
       `${config.loadApiEndpoint}/check`,
+      'POST',
+      idToken,
+      params
+    );
+  }
+
+  static async loadUrl(
+    params: LoadUrlRequest,
+    idToken: string
+  ): Promise<LoadUrlResponse> {
+    return this.makeRequest<LoadUrlResponse>(
+      `${config.apiEndpoint}/load-url`,
       'POST',
       idToken,
       params

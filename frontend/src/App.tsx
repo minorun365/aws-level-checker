@@ -18,7 +18,7 @@ class AppError extends Error {
 }
 
 function App() {
-  const [inputMode, setInputMode] = useState<'text' | 'pdf'>('text');
+  const [inputMode, setInputMode] = useState<'text' | 'pdf' | 'url'>('text');
   const [blogContent, setBlogContent] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -138,6 +138,22 @@ function App() {
           throw new AppError('PDFファイルを選択してください');
         }
         content = blogContent;
+      } else if (inputMode === 'url') {
+        if (!blogContent) {
+          throw new AppError('URLを入力してください');
+        }
+        try {
+          const result = await ApiService.loadUrl(
+            {
+              url: blogContent,
+              userEmail: auth.user?.profile?.email
+            },
+            auth.user?.id_token || ''
+          );
+          content = result.text;
+        } catch (error) {
+          throw new AppError('URLの読み込みに失敗しました');
+        }
       } else {
         content = blogContent;
       }
@@ -232,7 +248,7 @@ function App() {
               <Tabs
                 value={inputMode}
                 onValueChange={(value) => {
-                  setInputMode(value as 'text' | 'pdf');
+                  setInputMode(value as 'text' | 'pdf' | 'url');
                   setError('');
                   setBlogContent('');
                   setSelectedFile(null);
@@ -241,45 +257,55 @@ function App() {
               >
                 <TabsList className="w-full">
                   <TabsTrigger value="text" className="flex-1">テキストを入力</TabsTrigger>
+                  <TabsTrigger value="url" className="flex-1">URLを入力</TabsTrigger>
                   <TabsTrigger value="pdf" className="flex-1">PDFをアップロード</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="text">
-                <Textarea
-              value={blogContent}
-              onChange={(e) => setBlogContent(e.target.value)}
-              placeholder={`評価したいブログや登壇資料の内容を、テキスト形式でここにコピペしてね
-（URLを入れてもページを読みに行くことはできません）`}
-              className="min-h-[200px] bg-gray-700 text-white border-gray-600 placeholder:text-gray-300"
-                />
+                  <Textarea
+                    value={blogContent}
+                    onChange={(e) => setBlogContent(e.target.value)}
+                    placeholder="評価したいブログや登壇資料の内容を、テキスト形式でここにコピペしてね"
+                    className="min-h-[200px] bg-gray-700 text-white border-gray-600 placeholder:text-gray-300"
+                  />
                 </TabsContent>
+
+                <TabsContent value="url">
+                  <Textarea
+                    value={blogContent}
+                    onChange={(e) => setBlogContent(e.target.value)}
+                    placeholder="評価したいページのURLを入力してください"
+                    className="min-h-[100px] bg-gray-700 text-white border-gray-600 placeholder:text-gray-300"
+                  />
+                </TabsContent>
+
                 <TabsContent value="pdf">
-                <div className="flex flex-col items-center justify-center w-full">
-                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-600 border-dashed rounded-lg cursor-pointer bg-gray-700 hover:bg-gray-600">
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <p className="mb-2 text-sm text-white">
-                        {selectedFile ? selectedFile.name : 'PDFファイルをドロップするか、クリックして選択'}
-                      </p>
-                      <p className="text-xs text-gray-400">
-                        PDF (最大10MB)
-                      </p>
-                    </div>
-                    <input
-                      type="file"
-                      className="hidden"
-                      accept="application/pdf"
-                      onChange={handleFileChange}
-                    />
-                  </label>
-                  {isUploading && (
-                    <div className="w-full mt-4">
-                      <div className="text-sm text-white mb-2 text-center">
-                        PDFファイルをアップロード中...
+                  <div className="flex flex-col items-center justify-center w-full">
+                    <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-600 border-dashed rounded-lg cursor-pointer bg-gray-700 hover:bg-gray-600">
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <p className="mb-2 text-sm text-white">
+                          {selectedFile ? selectedFile.name : 'PDFファイルをドロップするか、クリックして選択'}
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          PDF (最大10MB)
+                        </p>
                       </div>
-                      <Progress value={uploadProgress} />
-                    </div>
-                  )}
-                </div>
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept="application/pdf"
+                        onChange={handleFileChange}
+                      />
+                    </label>
+                    {isUploading && (
+                      <div className="w-full mt-4">
+                        <div className="text-sm text-white mb-2 text-center">
+                          PDFファイルをアップロード中...
+                        </div>
+                        <Progress value={uploadProgress} />
+                      </div>
+                    )}
+                  </div>
                 </TabsContent>
               </Tabs>
             </div>

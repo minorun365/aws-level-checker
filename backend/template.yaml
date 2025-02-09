@@ -87,6 +87,23 @@ Resources:
       CodeUri: generate_tweet/
       Handler: lambda_function.lambda_handler
       Description: アウトプット判定結果をサマリーしてツイートを生成するLambda関数
+
+  # URL処理用Lambda関数
+  LoadUrlFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: load_url/
+      Handler: lambda_function.lambda_handler
+      Description: 指定されたURLからコンテンツを取得して処理するLambda関数
+      Runtime: python3.9
+      MemorySize: 128
+      Timeout: 29
+      Events:
+        LoadUrl:
+          Type: Api
+          Properties:
+            Path: /load-url
+            Method: post
       Policies:
         - AWSLambdaBasicExecutionRole
         - Version: '2012-10-17'
@@ -114,3 +131,7 @@ Outputs:
   GenerateTweetFunctionArn:
     Description: ツイート生成Lambda関数のARN
     Value: !GetAtt GenerateTweetFunction.Arn
+
+  LoadUrlFunctionArn:
+    Description: URL処理Lambda関数のARN
+    Value: !GetAtt LoadUrlFunction.Arn
