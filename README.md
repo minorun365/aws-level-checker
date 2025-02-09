@@ -4,7 +4,7 @@
 
 https://checker.minoruonda.com/
 
-![画面イメージ](https://github.com/user-attachments/assets/d27a9da1-c7e5-4f72-b1ee-8fa0baab1195)
+![画面イメージ](https://github.com/user-attachments/assets/3971d54b-5608-4a6a-965f-8161e36472db)
 
 
 ## アーキテクチャ
