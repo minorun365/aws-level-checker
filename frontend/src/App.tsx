@@ -274,7 +274,7 @@ function App() {
                   <Textarea
                     value={blogContent}
                     onChange={(e) => setBlogContent(e.target.value)}
-                    placeholder="評価したいページのURLを入力してください"
+                    placeholder="評価したいページのURLを入力してね（1件のみ）"
                     className="min-h-[100px] bg-gray-700 text-white border-gray-600 placeholder:text-gray-300"
                   />
                 </TabsContent>

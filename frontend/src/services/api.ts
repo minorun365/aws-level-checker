@@ -106,7 +106,7 @@ export class ApiService {
     idToken: string
   ): Promise<LoadUrlResponse> {
     return this.makeRequest<LoadUrlResponse>(
-      `${config.apiEndpoint}/load-url`,
+      `${config.loadUrlApiEndpoint}/check`,
       'POST',
       idToken,
       params
