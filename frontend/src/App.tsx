@@ -150,7 +150,7 @@ function App() {
             },
             auth.user?.id_token || ''
           );
-          content = result.text;
+          content = result.message;
         } catch (error) {
           throw new AppError('URLの読み込みに失敗しました');
         }

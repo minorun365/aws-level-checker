@@ -38,7 +38,7 @@ interface LoadUrlRequest {
 }
 
 interface LoadUrlResponse {
-  text: string;
+  message: string;
 }
 
 export class ApiService {

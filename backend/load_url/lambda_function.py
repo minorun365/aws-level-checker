@@ -44,17 +44,17 @@ def lambda_handler(event, context):
                 'Access-Control-Allow-Methods': 'OPTIONS,POST'
             },
             'body': json.dumps({
-                'text': text
+                'message': text
             })
         }
         
     except requests.RequestException as e:
         return {
             'statusCode': 400,
-            'body': json.dumps({'error': f'URLの取得に失敗しました: {str(e)}'})
+            'body': json.dumps({'message': f'URLの取得に失敗しました: {str(e)}'})
         }
     except Exception as e:
         return {
             'statusCode': 500,
-            'body': json.dumps({'error': str(e)})
+            'body': json.dumps({'message': str(e)})
         }
