@@ -98,12 +98,6 @@ Resources:
       Runtime: python3.9
       MemorySize: 128
       Timeout: 29
-      Events:
-        LoadUrl:
-          Type: Api
-          Properties:
-            Path: /load-url
-            Method: post
       Policies:
         - AWSLambdaBasicExecutionRole
         - Version: '2012-10-17'
