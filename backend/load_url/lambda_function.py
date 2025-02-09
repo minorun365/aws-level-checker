@@ -94,7 +94,18 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> LambdaResponse:
     """
     try:
         # リクエストボディからURLを取得
-        body = json.loads(event.get('body', '{}'))
+        if not event.get('body'):
+            return create_response(HttpStatus.BAD_REQUEST, {
+                "message": "リクエストボディが空です🤔"
+            })
+
+        try:
+            body = json.loads(event['body'])
+        except json.JSONDecodeError:
+            return create_response(HttpStatus.BAD_REQUEST, {
+                "message": "不正なリクエスト形式です"
+            })
+
         url = body.get('url')
         if not url:
             return create_response(HttpStatus.BAD_REQUEST, {
