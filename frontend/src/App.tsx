@@ -143,19 +143,33 @@ function App() {
           throw new AppError('URLを入力してください');
         }
         try {
-          const result = await ApiService.loadUrl(
+          // URLからコンテンツを取得
+          const urlResult = await ApiService.loadUrl(
             {
               url: blogContent,
               userEmail: auth.user?.profile?.email
             },
             auth.user?.id_token || ''
           );
-          content = result.message;
+          
+          if (!urlResult.message || urlResult.message.trim() === '') {
+            throw new AppError('URLからコンテンツを取得できませんでした');
+          }
+          
+          content = urlResult.message;
         } catch (error) {
+          if (error instanceof AppError) {
+            throw error;
+          }
           throw new AppError('URLの読み込みに失敗しました');
         }
       } else {
         content = blogContent;
+      }
+
+      // コンテンツが空の場合はエラー
+      if (!content.trim()) {
+        throw new AppError('評価するコンテンツが空です');
       }
 
       const data = await ApiService.checkContent(

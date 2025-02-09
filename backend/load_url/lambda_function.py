@@ -82,6 +82,8 @@ def extract_text_from_url(url: str) -> str:
         raise URLProcessError(f"URLからのテキスト抽出に失敗しました: {str(e)}")
 
 def lambda_handler(event: Dict[str, Any], context: Any) -> LambdaResponse:
+    # デバッグログ: イベント全体を出力
+    print("Event:", json.dumps(event, ensure_ascii=False))
     """
     Lambda関数のメインハンドラー
     
@@ -112,18 +114,26 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> LambdaResponse:
                 "message": "URLが入力されていないようです🤔"
             })
         
+        # デバッグログ: URLを出力
+        print("URL:", url)
+        
         # テキスト抽出
         extracted_text = extract_text_from_url(url)
         
+        # デバッグログ: 抽出されたテキストを出力
+        print("Extracted text:", extracted_text[:200] + "..." if len(extracted_text) > 200 else extracted_text)
+        
         return create_response(HttpStatus.OK, {
-            "message": extracted_text
+            "message": extracted_text if extracted_text.strip() else "テキストを抽出できませんでした。URLを確認してください。"
         })
 
     except URLProcessError as e:
+        print("URLProcessError:", str(e))
         return create_response(HttpStatus.BAD_REQUEST, {
             "message": str(e)
         })
     except Exception as e:
+        print("Unexpected error:", str(e))
         return create_response(HttpStatus.SERVER_ERROR, {
             "message": f"予期せぬエラーが発生しました: {str(e)}"
         })
