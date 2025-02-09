@@ -54,7 +54,7 @@ export function ShareButton({
         : 'bg-zinc-900 hover:bg-zinc-800 cursor-pointer'
     } text-white font-medium text-center py-2.5 rounded-lg border border-zinc-700 transition-all duration-200 shadow-sm`}
     >
-      {isLoading ? "️⌛️ ポストを生成中…" : "Xでポストする（障害中）"}
+      {isLoading ? "️⌛️ ポストを生成中…" : "Xでポストする"}
     </a>
   );
 }
