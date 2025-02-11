@@ -128,7 +128,7 @@ function App() {
         }
         return prev + 1;
       });
-    }, 120); // 12秒で100%まで進むように120msごとに1%進める
+    }, 200); // 20秒で100%まで進むように120msごとに1%進める
   
     try {
       let content = '';
@@ -234,7 +234,7 @@ function App() {
   const renderAuthenticatedContent = () => (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 p-4">
       <div className="max-w-4xl mx-auto space-y-4">
-        <div className="text-white text-right">
+        {/* <div className="text-white text-right">
           <a
             href="#"
             onClick={(e) => {
@@ -245,7 +245,7 @@ function App() {
           >
             サインアウト
           </a>
-        </div>
+        </div> */}
         <Card className="bg-gray-800 border-gray-700">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-white">
