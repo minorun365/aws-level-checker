@@ -1,0 +1,14 @@
+variable "existing_cognito_user_pool_id" {
+  description = "既存のCognito User Pool ID"
+  type        = string
+}
+
+variable "existing_cognito_client_id" {
+  description = "既存のCognito Client ID"
+  type        = string
+}
+
+variable "certificate_arn" {
+  description = "ACM証明書のARN（us-east-1リージョンのもの）"
+  type        = string
+}

@@ -1,0 +1,13 @@
+{
+  "Parameters": {
+    "S3BucketName": "alc-prd-uploaded-pdf",
+    "BedrockInferenceProfileArn": "arn:aws:bedrock:us-east-1:123456789012:inference-profile/example",
+    "LangfuseHost": "https://cloud.langfuse.com",
+    "LangfuseSecretUrl": "arn:aws:secretsmanager:us-east-1:123456789012:secret:prd/langfuse-xxxxxx",
+    "CognitoUserPoolId": "us-east-1_xxxxxxxx"
+  },
+  "Tags": {
+    "Environment": "prd",
+    "Project": "aws-level-checker"
+  }
+}

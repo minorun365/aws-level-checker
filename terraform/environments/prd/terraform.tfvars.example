@@ -1,0 +1,6 @@
+# 既存のCognitoリソースID
+existing_cognito_user_pool_id = "us-east-1_xxxxxxxx"
+existing_cognito_client_id    = "xxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+# ACM証明書のARN（us-east-1リージョンのもの）
+certificate_arn = "arn:aws:acm:us-east-1:123456789012:certificate/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
