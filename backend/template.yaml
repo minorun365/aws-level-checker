@@ -55,7 +55,7 @@ Resources:
       Cors:
         AllowMethods: "'GET,POST,OPTIONS'"
         AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Accept'"
-        AllowOrigin: "'*'"
+        AllowOrigin: !Sub "'${Environment == 'dev' ? 'https://dev-checker.minoruonda.com' : 'https://checker.minoruonda.com'}'"
         AllowCredentials: true
       Auth:
         DefaultAuthorizer: CognitoAuthorizer
