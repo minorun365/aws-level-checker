@@ -70,7 +70,7 @@ export class ApiService {
     idToken: string
   ): Promise<CheckResponse> {
     return this.makeRequest<CheckResponse>(
-      `${config.apiEndpoint}/check`,
+      `${config.apiEndpoint}/evaluate`,
       'POST',
       idToken,
       params
@@ -82,7 +82,7 @@ export class ApiService {
     idToken: string
   ): Promise<TweetResponse> {
     return this.makeRequest<TweetResponse>(
-      `${config.tweetApiEndpoint}/check`,
+      `${config.apiEndpoint}/tweet`,
       'POST',
       idToken,
       params
@@ -94,7 +94,7 @@ export class ApiService {
     idToken: string
   ): Promise<UploadPdfResponse> {
     return this.makeRequest<UploadPdfResponse>(
-      `${config.loadApiEndpoint}/check`,
+      `${config.apiEndpoint}/load-pdf`,
       'POST',
       idToken,
       params
@@ -106,7 +106,7 @@ export class ApiService {
     idToken: string
   ): Promise<LoadUrlResponse> {
     return this.makeRequest<LoadUrlResponse>(
-      `${config.loadUrlApiEndpoint}/check`,
+      `${config.apiEndpoint}/load-url`,
       'POST',
       idToken,
       params

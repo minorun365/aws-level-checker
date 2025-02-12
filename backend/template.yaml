@@ -4,6 +4,12 @@ Transform: AWS::Serverless-2016-10-31
 Description: AWS Level Checker Lambda関数の定義
 
 Parameters:
+  Environment:
+    Type: String
+    Description: デプロイ環境（dev/prd）
+    AllowedValues:
+      - dev
+      - prd
   S3BucketName:
     Type: String
     Description: PDFファイルを保存するS3バケット名
@@ -42,7 +48,8 @@ Resources:
   ApiGateway:
     Type: AWS::Serverless::Api
     Properties:
-      StageName: api
+      Name: aws-level-checker
+      StageName: !Ref Environment
       Cors:
         AllowMethods: "'GET,POST,OPTIONS'"
         AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
@@ -190,4 +197,4 @@ Outputs:
 
   ApiEndpoint:
     Description: API GatewayのエンドポイントURL
-    Value: !Sub 'https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/api/'
+    Value: !Sub 'https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/${Environment}/'

@@ -2,7 +2,6 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "alc-dev"
 resolve_s3 = true
 s3_prefix = "alc"
 region = "us-east-1"

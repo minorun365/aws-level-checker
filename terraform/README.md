@@ -54,19 +54,7 @@ terraform apply
 
 ### 2. SAMテンプレートのデプロイ
 
-```zsh
-cd backend
-
-# SAMテンプレートのデプロイ（開発環境の場合）
-sam deploy \
-  --stack-name alc-dev \
-  --parameter-overrides \
-    S3BucketName=dev-alc-uploaded-pdf \
-    BedrockInferenceProfileArn=<Bedrock推論プロファイルのARN> \
-    LangfuseHost=<LangfuseのホストURL> \
-    LangfuseSecretUrl=<Langfuse用SecretsManagerのURL> \
-    CognitoUserPoolId=<既存のCognitoユーザープールID>
-```
+バックエンドのデプロイ手順については、[backend/README.md](../backend/README.md)を参照してください。
 
 ## 環境ごとの設定
 

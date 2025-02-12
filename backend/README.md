@@ -30,9 +30,18 @@ backend/
     └── prd.json
 ```
 
-## 改善点
+## アーキテクチャ
 
-1. ハンドラーの整理
+1. API Gateway
+   - 名前: aws-level-checker（環境共通）
+   - 環境はステージで分離（dev/prd）
+   - 統合されたエンドポイント構成：
+     - /evaluate → レベル判定
+     - /tweet → ツイート生成
+     - /load-pdf → PDF処理
+     - /load-url → URL処理
+
+2. ハンドラーの整理
    - 各Lambda関数のコードを`src/handlers/`配下に移動
    - ファイル名を`lambda_function.py`から`app.py`に変更（より一般的な命名）
    - 各ハンドラーごとに`requirements.txt`を管理
@@ -81,3 +90,34 @@ mv backend/load_url/requirements.txt backend/src/handlers/load_url/
 - 共通コードを`shared`に移動する際は、依存関係を整理
 - 環境変数ファイルは`.gitignore`に追加
 - ディレクトリ名にはアンダースコア（_）を使用し、APIパスにはハイフン（-）を使用
+
+## デプロイ手順
+
+1. 設定ファイルの準備
+```zsh
+# samconfig.example.tomlをコピーしてsamconfig.tomlを作成
+cp samconfig.example.toml samconfig.toml
+```
+
+2. 環境変数の設定
+以下の環境変数を設定する必要があります：
+- S3_BUCKET_NAME: PDFファイルを保存するS3バケット名
+- BEDROCK_INFERENCE_PROFILE_ARN: Bedrock推論プロファイルのARN
+- LANGFUSE_HOST: LangfuseのホストURL
+- LANGFUSE_SECRET_URL: Langfuse用SecretsManagerのURL
+- COGNITO_USER_POOL_ID: 既存のCognitoユーザープールID
+
+3. デプロイの実行
+```zsh
+# 開発環境へのデプロイ
+sam deploy --stack-name alc-dev --parameter-overrides Environment=dev
+
+# 本番環境へのデプロイ
+sam deploy --stack-name alc-prd --parameter-overrides Environment=prd
+```
+
+デプロイ後、以下の形式でAPIエンドポイントが生成されます：
+- 開発環境: https://{api-id}.execute-api.{region}.amazonaws.com/dev/
+- 本番環境: https://{api-id}.execute-api.{region}.amazonaws.com/prd/
+
+Note: GitHub Actionsを使用する場合、環境変数は GitHub の Environment Secrets/Variables で管理されます。

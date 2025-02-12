@@ -10,11 +10,11 @@ provider "aws" {
   }
 }
 
-# ドキュメント用S3バケットモジュールの呼び出し
+# PDF用S3バケットモジュールの呼び出し
 module "document_bucket" {
   source = "../../modules/s3"
 
-  bucket_name = "dev-alc-uploaded-pdf"
+  bucket_name = "alc-dev-uploaded-pdf"
   allowed_origins = [
     "https://dev-checker.minoruonda.com"
   ]

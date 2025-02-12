@@ -10,7 +10,7 @@ provider "aws" {
   }
 }
 
-# ドキュメント用S3バケットモジュールの呼び出し
+# PDF用S3バケットモジュールの呼び出し
 module "document_bucket" {
   source = "../../modules/s3"
 

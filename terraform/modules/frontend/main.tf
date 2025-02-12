@@ -71,7 +71,7 @@ resource "aws_cloudfront_distribution" "frontend" {
   is_ipv6_enabled    = true
   default_root_object = "index.html"
   price_class        = "PriceClass_200"
-  aliases            = [var.domain_name]
+  # aliases            = [var.domain_name]
 
   origin {
     domain_name              = aws_s3_bucket.frontend.bucket_regional_domain_name
@@ -113,9 +113,10 @@ resource "aws_cloudfront_distribution" "frontend" {
   }
 
   viewer_certificate {
-    acm_certificate_arn      = var.certificate_arn
-    minimum_protocol_version = "TLSv1.2_2021"
-    ssl_support_method       = "sni-only"
+    cloudfront_default_certificate = true
+    # acm_certificate_arn      = var.certificate_arn
+    # minimum_protocol_version = "TLSv1.2_2021"
+    # ssl_support_method       = "sni-only"
   }
 
   tags = {
