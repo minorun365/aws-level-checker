@@ -65,7 +65,7 @@ def create_response(status_code: int, message: Dict[str, Any]) -> LambdaResponse
         "headers": {
             "Access-Control-Allow-Origin": os.environ.get("ALLOWED_ORIGIN", "https://dev-checker.minoruonda.com"),
             "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Accept,Referer",
-            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
             "Access-Control-Allow-Credentials": "true"
         },
         "body": json.dumps(message)
