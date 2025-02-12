@@ -3,6 +3,9 @@ Transform: AWS::Serverless-2016-10-31
 
 Description: AWS Level Checker Lambda関数の定義
 
+Conditions:
+  IsDev: !Equals [!Ref Environment, 'dev']
+
 Parameters:
   Environment:
     Type: String
@@ -55,7 +58,7 @@ Resources:
       Cors:
         AllowMethods: "'GET,POST,OPTIONS'"
         AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Accept'"
-        AllowOrigin: !Sub "'${Environment == 'dev' ? 'https://dev-checker.minoruonda.com' : 'https://checker.minoruonda.com'}'"
+        AllowOrigin: !If [IsDev, "'https://dev-checker.minoruonda.com'", "'https://checker.minoruonda.com'"]
         AllowCredentials: true
       Auth:
         DefaultAuthorizer: CognitoAuthorizer
