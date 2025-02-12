@@ -50,10 +50,13 @@ Resources:
     Properties:
       Name: aws-level-checker
       StageName: !Ref Environment
+      EndpointConfiguration:
+        Type: REGIONAL
       Cors:
         AllowMethods: "'GET,POST,OPTIONS'"
-        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Accept'"
         AllowOrigin: "'*'"
+        AllowCredentials: true
       Auth:
         DefaultAuthorizer: CognitoAuthorizer
         Authorizers:
