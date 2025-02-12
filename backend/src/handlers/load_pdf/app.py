@@ -139,12 +139,17 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> LambdaResponse:
     Returns:
         LambdaResponse: Lambda関数のレスポンス
     """
+    # OPTIONSメソッドの場合は早期リターン
+    if event.get("httpMethod") == "OPTIONS":
+        return create_response(HttpStatus.OK, {"message": "OK"})
+
     try:
         # 環境変数の検証
         validate_environment()
         
         # 入力チェック
-        pdf_base64 = event.get("pdfBase64")
+        body = json.loads(event.get("body", "{}"))
+        pdf_base64 = body.get("pdfBase64")
         if not pdf_base64:
             return create_response(HttpStatus.BAD_REQUEST, {
                 "message": "PDFファイルが入力されていないようです🤔"

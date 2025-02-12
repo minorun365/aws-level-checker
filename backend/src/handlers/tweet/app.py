@@ -220,12 +220,17 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> LambdaResponse:
     Returns:
         LambdaResponse: Lambda関数のレスポンス
     """
+    # OPTIONSメソッドの場合は早期リターン
+    if event.get("httpMethod") == "OPTIONS":
+        return create_response(HttpStatus.OK, {"message": "OK"})
+
     try:
         # 環境変数の検証
         validate_environment()
         
         # 入力チェック
-        eval_result = event.get("evalResult")
+        body = json.loads(event.get("body", "{}"))
+        eval_result = body.get("evalResult")
         if not eval_result:
             return create_response(HttpStatus.BAD_REQUEST, {
                 "message": "アウトプットの内容が入力されていないようです🤔"

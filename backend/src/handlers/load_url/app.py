@@ -95,9 +95,14 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> LambdaResponse:
     Returns:
         LambdaResponse: Lambda関数のレスポンス
     """
+    # OPTIONSメソッドの場合は早期リターン
+    if event.get("httpMethod") == "OPTIONS":
+        return create_response(HttpStatus.OK, {"message": "OK"})
+
     try:
         # URLを取得
-        url = event.get('url')
+        body = json.loads(event.get("body", "{}"))
+        url = body.get('url')
         if not url:
             return create_response(HttpStatus.BAD_REQUEST, {
                 "message": "URLが入力されていないようです🤔"

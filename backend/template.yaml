@@ -56,7 +56,7 @@ Resources:
       EndpointConfiguration:
         Type: REGIONAL
       Cors:
-        AllowMethods: "*"
+        AllowMethods: "GET,POST,PUT,DELETE,OPTIONS"
         AllowHeaders: "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Accept,Referer"
         AllowOrigin: !If [IsDev, "https://dev-checker.minoruonda.com", "https://checker.minoruonda.com"]
         AllowCredentials: true
