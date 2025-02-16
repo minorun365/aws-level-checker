@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - dev
+      - 'feature/*'  # featureから始まる全てのブランチをトリガーとする
 
 permissions:
   id-token: write
