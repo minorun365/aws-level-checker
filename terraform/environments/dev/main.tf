@@ -49,7 +49,7 @@ data "aws_cognito_user_pool_client" "existing" {
 # 環境固有の変数定義
 terraform {
   backend "s3" {
-    bucket = var.tfstate_bucket
+    bucket = "alc-terraform-state"
     key    = "dev/terraform.tfstate"
     region = "us-east-1"
   }
