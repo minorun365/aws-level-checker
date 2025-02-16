@@ -1,10 +1,10 @@
 # プロバイダーの設定
 provider "aws" {
-  region = "us-east-1"
+  region = var.aws_region
   default_tags {
     tags = {
       Environment = "dev"
-      Project     = "aws-level-checker"
+      Project     = var.project
       IaC         = "Terraform"
     }
   }
@@ -49,7 +49,7 @@ data "aws_cognito_user_pool_client" "existing" {
 # 環境固有の変数定義
 terraform {
   backend "s3" {
-    bucket = "alc-terraform-state"
+    bucket = var.tfstate_bucket
     key    = "dev/terraform.tfstate"
     region = "us-east-1"
   }
