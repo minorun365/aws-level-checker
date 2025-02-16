@@ -62,7 +62,7 @@ export class ApiService {
     }
 
     const data = await response.json();
-    return data.body as T;
+    return data as T;
   }
 
   static async checkContent(
