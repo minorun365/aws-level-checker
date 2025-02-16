@@ -51,7 +51,7 @@ Resources:
   ApiGateway:
     Type: AWS::Serverless::Api
     Properties:
-      Name: aws-level-checker
+      Name: !Sub 'alc-api-${Environment}'
       StageName: !Ref Environment
       EndpointConfiguration:
         Type: REGIONAL
