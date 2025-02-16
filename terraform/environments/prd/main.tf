@@ -24,9 +24,8 @@ module "document_bucket" {
 module "frontend" {
   source = "../../modules/frontend"
 
-  bucket_name     = "alc-prd-frontend"
-  domain_name     = "checker.minoruonda.com"
-  certificate_arn = var.certificate_arn
+  bucket_name = "alc-prd-frontend"
+  domain_name = "checker.minoruonda.com"
 }
 
 # 既存のCognitoリソースの参照
