@@ -37,7 +37,7 @@ Globals:
     Timeout: 30
     # Lambdaレイヤーの設定
     Layers:
-      - arn:aws:lambda:us-east-1:715841358122:layer:langfuse:5
+      - !Ref LangChainLayer
       - arn:aws:lambda:us-east-1:177933569100:layer:AWS-Parameters-and-Secrets-Lambda-Extension:12
     # 環境変数の設定
     Environment:
@@ -47,6 +47,17 @@ Globals:
         LANGFUSE_SECRET_NAME: !Ref LangfuseSecretName
 
 Resources:
+  # LangChainレイヤー
+  LangChainLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: !Sub 'alc-langchain-layer-${Environment}'
+      Description: Layer for LangChain and related libraries
+      ContentUri: layers/langchain/
+      CompatibleRuntimes:
+        - python3.12
+      RetentionPolicy: Retain
+
   # API Gateway
   ApiGateway:
     Type: AWS::Serverless::Api
