@@ -35,7 +35,7 @@ class HttpStatus:
 
 # 必要な環境変数のリスト
 REQUIRED_ENV_VARS = [
-    "S3_BUCKET_NAME"
+    "PDF_BUCKET_NAME"
 ]
 
 def validate_environment() -> None:
@@ -62,6 +62,12 @@ def create_response(status_code: int, message: Dict[str, Any]) -> LambdaResponse
     """
     return {
         "statusCode": status_code,
+        "headers": {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Content-Type,Authorization",
+            "Access-Control-Allow-Methods": "OPTIONS,POST",
+            "Access-Control-Allow-Credentials": "true"
+        },
         "body": json.dumps(message)
     }
 
@@ -81,7 +87,7 @@ def save_to_s3(pdf_content: bytes, file_name: str) -> str:
     """
     try:
         s3 = boto3.client('s3')
-        bucket_name = os.environ["S3_BUCKET_NAME"]
+        bucket_name = os.environ["PDF_BUCKET_NAME"]
         object_key = f"uploads/{file_name}"
         
         s3.put_object(
@@ -133,12 +139,17 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> LambdaResponse:
     Returns:
         LambdaResponse: Lambda関数のレスポンス
     """
+    # OPTIONSメソッドの場合は早期リターン
+    if event.get("httpMethod") == "OPTIONS":
+        return create_response(HttpStatus.OK, {"message": "OK"})
+
     try:
         # 環境変数の検証
         validate_environment()
         
         # 入力チェック
-        pdf_base64 = event.get("pdfBase64")
+        body = json.loads(event.get("body", "{}"))
+        pdf_base64 = body.get("pdfBase64")
         if not pdf_base64:
             return create_response(HttpStatus.BAD_REQUEST, {
                 "message": "PDFファイルが入力されていないようです🤔"

@@ -58,8 +58,7 @@ class BedrockConfig:
 REQUIRED_ENV_VARS: List[str] = [
     "LANGFUSE_SECRET_URL",
     "BEDROCK_INFERENCE_PROFILE_ARN",
-    "LANGFUSE_HOST",
-    "AWS_SESSION_TOKEN"
+    "LANGFUSE_HOST"
 ]
 
 def validate_environment() -> None:
@@ -86,7 +85,14 @@ def create_response(status_code: int, message: Dict[str, Any]) -> LambdaResponse
     """
     return {
         "statusCode": status_code,
-        "body": json.dumps(message)
+        "headers": {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Content-Type,Authorization",
+            "Access-Control-Allow-Methods": "OPTIONS,POST",
+            "Access-Control-Allow-Credentials": "true",
+            "Content-Type": "application/json"
+        },
+        "body": json.dumps(message, ensure_ascii=False)
     }
 
 def get_secrets() -> SecretConfig:
@@ -216,12 +222,31 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> LambdaResponse:
     Returns:
         LambdaResponse: Lambda関数のレスポンス
     """
+    # デバッグ用にイベント内容をログ出力
+    print("Event:", json.dumps(event, ensure_ascii=False))
+
+    # OPTIONSメソッドの場合は早期リターン
+    if event.get("httpMethod") == "OPTIONS":
+        return create_response(HttpStatus.OK, {"message": "OK"})
+
     try:
         # 環境変数の検証
         validate_environment()
         
-        # 入力チェック
-        blog_content = event.get("blogContent")
+        # プロキシ統合からのリクエストボディを解析
+        body = event.get("body", "{}")
+        if isinstance(body, str):
+            try:
+                body = json.loads(body)
+            except json.JSONDecodeError as e:
+                print("JSONデコードエラー:", str(e))
+                print("受信したbody:", body)
+                return create_response(HttpStatus.BAD_REQUEST, {
+                    "message": "リクエストボディのJSONパースに失敗しました"
+                })
+
+        print("Parsed body:", json.dumps(body, ensure_ascii=False))
+        blog_content = body.get("blogContent")
         if not blog_content:
             return create_response(HttpStatus.BAD_REQUEST, {
                 "message": "アウトプットの内容が入力されていないようです🤔"
@@ -233,7 +258,7 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> LambdaResponse:
         # Langfuseセットアップ
         langfuse_handler, langfuse_session_id, langfuse = setup_langfuse(
             secret,
-            event.get("userEmail")
+            event.get("requestContext", {}).get("authorizer", {}).get("claims", {}).get("email")
         )
         
         # 出力評価

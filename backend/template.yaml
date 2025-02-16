@@ -3,11 +3,19 @@ Transform: AWS::Serverless-2016-10-31
 
 Description: AWS Level Checker Lambda関数の定義
 
+Conditions:
+  IsDev: !Equals [!Ref Environment, 'dev']
+
 Parameters:
-  S3BucketName:
+  Environment:
     Type: String
-    Description: PDFファイルを保存するS3バケット名
-    Default: alc-uploaded-documents
+    Description: デプロイ環境（dev/prd）
+    AllowedValues:
+      - dev
+      - prd
+  PdfBucketName:
+    Type: String
+    Description: PDFファイルを保存するS3バケット名（Terraformで作成したalc-dev-uploaded-pdf）
   BedrockInferenceProfileArn:
     Type: String
     Description: Bedrock推論プロファイルのARN
@@ -17,6 +25,9 @@ Parameters:
   LangfuseSecretUrl:
     Type: String
     Description: AWS Secrets ManagerのLangfuse用エンドポイントURL
+  CognitoUserPoolId:
+    Type: String
+    Description: 既存のCognito User Pool ID
 
 # 共通設定
 Globals:
@@ -36,19 +47,39 @@ Globals:
         LANGFUSE_SECRET_URL: !Ref LangfuseSecretUrl
 
 Resources:
+  # API Gateway
+  ApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: aws-level-checker
+      StageName: !Ref Environment
+      EndpointConfiguration:
+        Type: REGIONAL
+      Cors:
+        AllowMethods: "OPTIONS,POST"
+        AllowHeaders: "Content-Type,Authorization"
+        AllowOrigin: "*"
+        AllowCredentials: "true"
+      Auth:
+        DefaultAuthorizer: CognitoAuthorizer
+        Authorizers:
+          CognitoAuthorizer:
+            UserPoolArn: !Sub 'arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${CognitoUserPoolId}'
+        AddDefaultAuthorizerToCorsPreflight: false
+
   # PDFドキュメント処理用Lambda関数
   LoadDocumentFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: load_document/
-      Handler: lambda_function.lambda_handler
+      CodeUri: src/handlers/load_pdf/
+      Handler: app.lambda_handler
       Description: アップロードされたPDFファイルを処理するLambda関数
       Runtime: python3.9
       MemorySize: 512    # PDFの処理に十分なメモリを確保
       Timeout: 60        # PDFの処理に十分な時間を確保
       Environment:
         Variables:
-          S3_BUCKET_NAME: !Ref S3BucketName
+          PDF_BUCKET_NAME: !Ref PdfBucketName
       Policies:
         - AWSLambdaBasicExecutionRole
         - Version: '2012-10-17'
@@ -57,14 +88,29 @@ Resources:
               Action:
                 - s3:PutObject
                 - s3:GetObject
-              Resource: !Sub 'arn:aws:s3:::${S3BucketName}/*'
+              Resource: !Sub 'arn:aws:s3:::${PdfBucketName}/*'
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /load-pdf
+            Method: post
+            RestApiId: !Ref ApiGateway
+        OptionsEvent:
+          Type: Api
+          Properties:
+            Path: /load-pdf
+            Method: options
+            RestApiId: !Ref ApiGateway
+            Auth:
+              Authorizer: NONE
 
   # 評価出力用Lambda関数
   EvaluateOutputFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: evaluate_output/
-      Handler: lambda_function.lambda_handler
+      CodeUri: src/handlers/evaluate/
+      Handler: app.lambda_handler
       Description: ユーザーのAWSアウトプットをレベル判定するLambda関数
       Policies:
         - AWSLambdaBasicExecutionRole
@@ -79,13 +125,28 @@ Resources:
                 - secretsmanager:GetSecretValue
                 - secretsmanager:PutSecretValue
               Resource: '*'
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /evaluate
+            Method: post
+            RestApiId: !Ref ApiGateway
+        OptionsEvent:
+          Type: Api
+          Properties:
+            Path: /evaluate
+            Method: options
+            RestApiId: !Ref ApiGateway
+            Auth:
+              Authorizer: NONE
 
   # ツイート生成用Lambda関数
   GenerateTweetFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: generate_tweet/
-      Handler: lambda_function.lambda_handler
+      CodeUri: src/handlers/tweet/
+      Handler: app.lambda_handler
       Description: アウトプット判定結果をサマリーしてツイートを生成するLambda関数
       Policies:
         - AWSLambdaBasicExecutionRole
@@ -100,13 +161,28 @@ Resources:
                 - secretsmanager:GetSecretValue
                 - secretsmanager:PutSecretValue
               Resource: '*'
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /tweet
+            Method: post
+            RestApiId: !Ref ApiGateway
+        OptionsEvent:
+          Type: Api
+          Properties:
+            Path: /tweet
+            Method: options
+            RestApiId: !Ref ApiGateway
+            Auth:
+              Authorizer: NONE
 
   # URL処理用Lambda関数
   LoadUrlFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: load_url/
-      Handler: lambda_function.lambda_handler
+      CodeUri: src/handlers/load_url/
+      Handler: app.lambda_handler
       Description: 指定されたURLからコンテンツを取得して処理するLambda関数
       Runtime: python3.9
       MemorySize: 128
@@ -124,6 +200,21 @@ Resources:
                 - secretsmanager:GetSecretValue
                 - secretsmanager:PutSecretValue
               Resource: '*'
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /load-url
+            Method: post
+            RestApiId: !Ref ApiGateway
+        OptionsEvent:
+          Type: Api
+          Properties:
+            Path: /load-url
+            Method: options
+            RestApiId: !Ref ApiGateway
+            Auth:
+              Authorizer: NONE
 
 # 出力値の定義
 Outputs:
@@ -142,3 +233,7 @@ Outputs:
   LoadUrlFunctionArn:
     Description: URL処理Lambda関数のARN
     Value: !GetAtt LoadUrlFunction.Arn
+
+  ApiEndpoint:
+    Description: API GatewayのエンドポイントURL
+    Value: !Sub 'https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/${Environment}/'

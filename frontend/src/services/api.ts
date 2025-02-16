@@ -58,11 +58,12 @@ export class ApiService {
     });
 
     if (!response.ok) {
-      throw new Error('APIエラーが発生しました');
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'APIエラーが発生しました');
     }
 
     const data = await response.json();
-    return JSON.parse(data.body);
+    return data as T;
   }
 
   static async checkContent(
@@ -70,7 +71,7 @@ export class ApiService {
     idToken: string
   ): Promise<CheckResponse> {
     return this.makeRequest<CheckResponse>(
-      `${config.apiEndpoint}/check`,
+      `${config.apiEndpoint}/evaluate`,
       'POST',
       idToken,
       params
@@ -82,7 +83,7 @@ export class ApiService {
     idToken: string
   ): Promise<TweetResponse> {
     return this.makeRequest<TweetResponse>(
-      `${config.tweetApiEndpoint}/check`,
+      `${config.apiEndpoint}/tweet`,
       'POST',
       idToken,
       params
@@ -94,7 +95,7 @@ export class ApiService {
     idToken: string
   ): Promise<UploadPdfResponse> {
     return this.makeRequest<UploadPdfResponse>(
-      `${config.loadApiEndpoint}/check`,
+      `${config.apiEndpoint}/load-pdf`,
       'POST',
       idToken,
       params
@@ -106,7 +107,7 @@ export class ApiService {
     idToken: string
   ): Promise<LoadUrlResponse> {
     return this.makeRequest<LoadUrlResponse>(
-      `${config.loadUrlApiEndpoint}/check`,
+      `${config.apiEndpoint}/load-url`,
       'POST',
       idToken,
       params

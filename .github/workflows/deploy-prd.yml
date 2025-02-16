@@ -18,46 +18,38 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      # フロントエンドのデプロイ
-      - name: Node.jsのセットアップ
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          
+      # AWS認証
       - name: AWS認証情報の設定
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.IAM_ROLE_ARN }}
           aws-region: us-east-1
           role-session-name: GitHubActionsSession
-          
-      - name: 依存ライブラリのインストール
-        working-directory: ./frontend
-        run: npm install
-        
-      - name: ビルド
-        working-directory: ./frontend
-        env:
-          VITE_SITE_URL: ${{ vars.VITE_SITE_URL }}
-          VITE_COGNITO_DOMAIN: ${{ vars.VITE_COGNITO_DOMAIN }}
-          VITE_COGNITO_AUTHORITY: ${{ vars.VITE_COGNITO_AUTHORITY }}
-          VITE_COGNITO_REDIRECT_URI: ${{ vars.VITE_COGNITO_REDIRECT_URI }}
-          VITE_COGNITO_LOGOUT_URI: ${{ vars.VITE_COGNITO_LOGOUT_URI }}
-          VITE_API_ENDPOINT: ${{ vars.VITE_API_ENDPOINT }}
-          VITE_TWEET_API_ENDPOINT: ${{ vars.VITE_TWEET_API_ENDPOINT }}
-          VITE_LOAD_API_ENDPOINT: ${{ vars.VITE_LOAD_API_ENDPOINT }}
-          VITE_LOAD_URL_API_ENDPOINT: ${{ vars.VITE_LOAD_URL_API_ENDPOINT }}
-          VITE_COGNITO_CLIENT_ID: ${{ secrets.VITE_COGNITO_CLIENT_ID }}
-          VITE_LANGFUSE_PUBLIC_KEY: ${{ secrets.VITE_LANGFUSE_PUBLIC_KEY }}
-        run: npm run build:prd
-        
-      - name: S3へデプロイ
+
+      # Terraformのデプロイ
+      - name: Terraformのセットアップ
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: '1.5.0'
+
+      - name: Terraformの初期化
+        working-directory: ./terraform/environments/prd
+        run: terraform init
+
+      - name: terraform.tfvarsの作成
+        working-directory: ./terraform/environments/prd
         run: |
-          aws s3 sync ./frontend/dist/ s3://${{ vars.S3_BUCKET_NAME }}/ --delete
-          
-      - name: CloudFrontのキャッシュ削除
+          cat << EOF > terraform.tfvars
+          existing_cognito_user_pool_id = "${{ vars.COGNITO_USER_POOL_ID }}"
+          existing_cognito_client_id    = "${{ secrets.VITE_COGNITO_CLIENT_ID }}"
+          domain_name                   = "${{ vars.SITE_DOMAIN }}"
+          EOF
+
+      - name: Terraformのデプロイ
+        working-directory: ./terraform/environments/prd
         run: |
-          aws cloudfront create-invalidation --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+          terraform plan -var-file=terraform.tfvars
+          terraform apply -auto-approve -var-file=terraform.tfvars
 
       # バックエンドのデプロイ
       - name: Python 3.9のセットアップ
@@ -77,11 +69,44 @@ jobs:
       - name: SAMデプロイ
         working-directory: ./backend
         run: |
-          sam deploy --config-env prd --no-confirm-changeset --no-fail-on-empty-changeset \
+          sam deploy --stack-name alc-prd --no-confirm-changeset --no-fail-on-empty-changeset \
             --parameter-overrides \
+              Environment=prd \
+              PdfBucketName=${{ vars.PDF_BUCKET_NAME }} \
               BedrockInferenceProfileArn=${{ vars.BEDROCK_INFERENCE_PROFILE_ARN }} \
               LangfuseHost=${{ vars.LANGFUSE_HOST }} \
               LangfuseSecretUrl=${{ vars.LANGFUSE_SECRET_URL }}
+
+      # フロントエンドのデプロイ
+      - name: Node.jsのセットアップ
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: 依存ライブラリのインストール
+        working-directory: ./frontend
+        run: npm install
+        
+      - name: ビルド
+        working-directory: ./frontend
+        env:
+          VITE_SITE_URL: ${{ vars.VITE_SITE_URL }}
+          VITE_COGNITO_DOMAIN: ${{ vars.VITE_COGNITO_DOMAIN }}
+          VITE_COGNITO_AUTHORITY: ${{ vars.VITE_COGNITO_AUTHORITY }}
+          VITE_COGNITO_REDIRECT_URI: ${{ vars.VITE_COGNITO_REDIRECT_URI }}
+          VITE_COGNITO_LOGOUT_URI: ${{ vars.VITE_COGNITO_LOGOUT_URI }}
+          VITE_API_ENDPOINT: ${{ vars.VITE_API_ENDPOINT }}
+          VITE_COGNITO_CLIENT_ID: ${{ secrets.VITE_COGNITO_CLIENT_ID }}
+          VITE_LANGFUSE_PUBLIC_KEY: ${{ secrets.VITE_LANGFUSE_PUBLIC_KEY }}
+        run: npm run build:prd
+        
+      - name: S3へデプロイ
+        run: |
+          aws s3 sync ./frontend/dist/ s3://${{ vars.S3_BUCKET_NAME }}/ --delete
+          
+      - name: CloudFrontのキャッシュ削除
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
 
       # Langfuseプロンプトの更新
       - name: Langfuseライブラリのインストール

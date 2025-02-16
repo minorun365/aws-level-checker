@@ -1,19 +1,17 @@
 version = 0.1
-
-[dev.deploy.parameters]
-stack_name = "aws-level-checker-dev"
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "aws-level-checker"
 resolve_s3 = true
-s3_prefix = "aws-level-checker-dev"
+s3_prefix = "alc"
 region = "us-east-1"
+confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
-parameter_overrides = "Environment=\"dev\""
-image_repositories = []
-
-[prd.deploy.parameters]
-stack_name = "aws-level-checker-prd"
-resolve_s3 = true
-s3_prefix = "aws-level-checker-prd"
-region = "us-east-1"
-capabilities = "CAPABILITY_IAM"
-parameter_overrides = "Environment=\"prd\""
-image_repositories = []
+parameter_overrides = [
+    "S3BucketName=${env:S3_BUCKET_NAME}",
+    "BedrockInferenceProfileArn=${env:BEDROCK_INFERENCE_PROFILE_ARN}",
+    "LangfuseHost=${env:LANGFUSE_HOST}",
+    "LangfuseSecretUrl=${env:LANGFUSE_SECRET_URL}",
+    "CognitoUserPoolId=${env:COGNITO_USER_POOL_ID}"
+]
