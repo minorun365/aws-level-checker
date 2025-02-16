@@ -3,9 +3,10 @@
 
 # SAMの設定ファイル
 samconfig.toml
+!samconfig.example.toml
 
-# 環境変数ファイル（実際の値）
+# 環境変数ファイル
+.env
+!.env.example
 env.*.json
-
-# 例示用ファイルは除外しない
 !env.*.example.json

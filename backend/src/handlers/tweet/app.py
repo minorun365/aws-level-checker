@@ -85,6 +85,12 @@ def create_response(status_code: int, message: Dict[str, Any]) -> LambdaResponse
     """
     return {
         "statusCode": status_code,
+        "headers": {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Content-Type,Authorization",
+            "Access-Control-Allow-Methods": "OPTIONS,POST",
+            "Access-Control-Allow-Credentials": "true"
+        },
         "body": json.dumps(message)
     }
 
@@ -214,12 +220,17 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> LambdaResponse:
     Returns:
         LambdaResponse: Lambda関数のレスポンス
     """
+    # OPTIONSメソッドの場合は早期リターン
+    if event.get("httpMethod") == "OPTIONS":
+        return create_response(HttpStatus.OK, {"message": "OK"})
+
     try:
         # 環境変数の検証
         validate_environment()
         
         # 入力チェック
-        eval_result = event.get("evalResult")
+        body = json.loads(event.get("body", "{}"))
+        eval_result = body.get("evalResult")
         if not eval_result:
             return create_response(HttpStatus.BAD_REQUEST, {
                 "message": "アウトプットの内容が入力されていないようです🤔"
@@ -231,8 +242,8 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> LambdaResponse:
         # Langfuseセットアップ
         langfuse_handler, langfuse = setup_langfuse(
             secret,
-            event.get("userEmail"),
-            event.get("langfuseSessionId")
+            body.get("userEmail"),
+            body.get("langfuseSessionId")
         )
         
         # ツイート生成
