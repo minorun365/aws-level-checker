@@ -56,7 +56,7 @@ class BedrockConfig:
 
 # 必要な環境変数のリスト
 REQUIRED_ENV_VARS: List[str] = [
-    "LANGFUSE_SECRET_URL",
+    "LANGFUSE_SECRET_NAME",
     "BEDROCK_INFERENCE_PROFILE_ARN",
     "LANGFUSE_HOST"
 ]
@@ -107,7 +107,7 @@ def get_secrets() -> SecretConfig:
     """
     try:
         headers = {"X-Aws-Parameters-Secrets-Token": os.environ.get('AWS_SESSION_TOKEN')}
-        secrets_extension_endpoint = os.environ["LANGFUSE_SECRET_URL"]
+        secrets_extension_endpoint = f"http://localhost:2773/secretsmanager/get?secretId={os.environ['LANGFUSE_SECRET_NAME']}"
         secrets_response = requests.get(secrets_extension_endpoint, headers=headers)
         
         if secrets_response.status_code != HttpStatus.OK:

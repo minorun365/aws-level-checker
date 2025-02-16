@@ -79,7 +79,8 @@ jobs:
               PdfBucketName=${{ vars.PDF_BUCKET_NAME }} \
               BedrockInferenceProfileArn=${{ vars.BEDROCK_INFERENCE_PROFILE_ARN }} \
               LangfuseHost=${{ vars.LANGFUSE_HOST }} \
-              LangfuseSecretUrl=${{ vars.LANGFUSE_SECRET_URL }}
+              LangfuseSecretName=${{ vars.LANGFUSE_SECRET_NAME }} \
+              CognitoUserPoolId=${{ vars.COGNITO_USER_POOL_ID }}
 
       # フロントエンドのデプロイ
       - name: Node.jsのセットアップ
@@ -119,7 +120,7 @@ jobs:
       - name: プロンプトの更新
         working-directory: ./prompts
         env:
-          LANGFUSE_PUBLIC_KEY: ${{ secrets.LANGFUSE_PUBLIC_KEY }}
+          LANGFUSE_PUBLIC_KEY: ${{ secrets.VITE_LANGFUSE_PUBLIC_KEY }}
           LANGFUSE_SECRET_KEY: ${{ secrets.LANGFUSE_SECRET_KEY }}
           LANGFUSE_HOST: ${{ vars.LANGFUSE_HOST }}
         run: python update_prompts.py

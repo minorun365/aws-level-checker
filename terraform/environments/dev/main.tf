@@ -1,10 +1,10 @@
 # プロバイダーの設定
 provider "aws" {
-  region = "us-east-1"
+  region = var.aws_region
   default_tags {
     tags = {
       Environment = "dev"
-      Project     = "aws-level-checker"
+      Project     = var.project
       IaC         = "Terraform"
     }
   }

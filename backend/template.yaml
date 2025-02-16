@@ -22,9 +22,9 @@ Parameters:
   LangfuseHost:
     Type: String
     Description: LangfuseのホストURL
-  LangfuseSecretUrl:
+  LangfuseSecretName:
     Type: String
-    Description: AWS Secrets ManagerのLangfuse用エンドポイントURL
+    Description: AWS Secrets ManagerのLangfuse用シークレット名
   CognitoUserPoolId:
     Type: String
     Description: 既存のCognito User Pool ID
@@ -44,7 +44,7 @@ Globals:
       Variables:
         BEDROCK_INFERENCE_PROFILE_ARN: !Ref BedrockInferenceProfileArn
         LANGFUSE_HOST: !Ref LangfuseHost
-        LANGFUSE_SECRET_URL: !Ref LangfuseSecretUrl
+        LANGFUSE_SECRET_NAME: !Ref LangfuseSecretName
 
 Resources:
   # API Gateway
