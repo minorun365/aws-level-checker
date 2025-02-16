@@ -13,7 +13,7 @@ resource "aws_secretsmanager_secret" "langfuse" {
 resource "aws_secretsmanager_secret_version" "langfuse" {
   secret_id = aws_secretsmanager_secret.langfuse.id
   secret_string = jsonencode({
-    "public_key": "",
-    "secret_key": ""
+    "LANGFUSE_PUBLIC_KEY": "",
+    "LANGFUSE_SECRET_KEY": ""
   })
 }
