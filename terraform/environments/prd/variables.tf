@@ -12,3 +12,18 @@ variable "domain_name" {
   description = "フロントエンドのドメイン名"
   type        = string
 }
+
+variable "document_bucket_name" {
+  description = "ドキュメント用S3バケット名"
+  type        = string
+}
+
+variable "frontend_bucket_name" {
+  description = "フロントエンド用S3バケット名"
+  type        = string
+}
+
+variable "allowed_origin" {
+  description = "CORSで許可するオリジン"
+  type        = string
+}
