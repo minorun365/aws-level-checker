@@ -8,7 +8,7 @@ def get_langfuse_client():
     # SecretsManagerからLangfuseの認証情報を取得
     secrets_client = boto3.client('secretsmanager')
     secret_response = secrets_client.get_secret_value(
-        SecretId=os.environ['LANGFUSE_SECRET_URL']
+        SecretId=os.environ['LANGFUSE_SECRET_NAME']
     )
     secret = json.loads(secret_response['SecretString'])
     
