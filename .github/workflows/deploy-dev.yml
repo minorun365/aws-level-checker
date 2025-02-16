@@ -16,6 +16,9 @@ jobs:
     environment: 
       name: dev
     
+    env:
+      ENV: dev
+    
     steps:
       - uses: actions/checkout@v4
       
@@ -43,10 +46,10 @@ jobs:
           cat << EOF > terraform.tfvars
           existing_cognito_user_pool_id = "${{ vars.COGNITO_USER_POOL_ID }}"
           existing_cognito_client_id    = "${{ secrets.VITE_COGNITO_CLIENT_ID }}"
-          domain_name                   = "${{ vars.SITE_DOMAIN }}"
-          document_bucket_name          = "${{ vars.PDF_BUCKET_NAME }}"
-          frontend_bucket_name          = "${{ vars.S3_BUCKET_NAME }}"
-          allowed_origin               = "${{ vars.VITE_SITE_URL }}"
+          domain_name                   = "${{ env.ENV == 'prd' && 'checker.minoruonda.com' || 'dev-checker.minoruonda.com' }}"
+          document_bucket_name          = "alc-${{ env.ENV }}-uploaded-pdf"
+          frontend_bucket_name          = "alc-${{ env.ENV }}-frontend"
+          allowed_origin               = "https://${{ env.ENV == 'prd' && 'checker.minoruonda.com' || 'dev-checker.minoruonda.com' }}"
           EOF
 
       - name: Terraformのデプロイ
@@ -73,10 +76,10 @@ jobs:
       - name: SAMデプロイ
         working-directory: ./backend
         run: |
-          sam deploy --stack-name alc-dev --no-confirm-changeset --no-fail-on-empty-changeset \
+          sam deploy --stack-name alc-${{ env.ENV }} --no-confirm-changeset --no-fail-on-empty-changeset \
             --parameter-overrides \
-              Environment=dev \
-              PdfBucketName=${{ vars.PDF_BUCKET_NAME }} \
+              Environment=${{ env.ENV }} \
+              PdfBucketName=alc-${{ env.ENV }}-uploaded-pdf \
               BedrockInferenceProfileArn=${{ vars.BEDROCK_INFERENCE_PROFILE_ARN }} \
               LangfuseHost=${{ vars.LANGFUSE_HOST }} \
               LangfuseSecretName=${{ vars.LANGFUSE_SECRET_NAME }} \
@@ -95,7 +98,7 @@ jobs:
       - name: ビルド
         working-directory: ./frontend
         env:
-          VITE_SITE_URL: ${{ vars.VITE_SITE_URL }}
+          VITE_SITE_URL: "https://${{ env.ENV == 'prd' && 'checker.minoruonda.com' || 'dev-checker.minoruonda.com' }}"
           VITE_COGNITO_DOMAIN: ${{ vars.VITE_COGNITO_DOMAIN }}
           VITE_COGNITO_AUTHORITY: ${{ vars.VITE_COGNITO_AUTHORITY }}
           VITE_COGNITO_REDIRECT_URI: ${{ vars.VITE_COGNITO_REDIRECT_URI }}
@@ -107,7 +110,7 @@ jobs:
         
       - name: S3へデプロイ
         run: |
-          aws s3 sync ./frontend/dist/ s3://${{ vars.S3_BUCKET_NAME }}/ --delete
+          aws s3 sync ./frontend/dist/ s3://alc-${{ env.ENV }}-frontend/ --delete
           
       - name: CloudFrontのキャッシュ削除
         run: |
