@@ -25,7 +25,7 @@ module "frontend" {
   source = "../../modules/frontend"
 
   bucket_name = "alc-prd-frontend"
-  domain_name = "checker.minoruonda.com"
+  domain_name = var.domain_name
 }
 
 # 既存のCognitoリソースの参照

@@ -7,3 +7,8 @@ variable "existing_cognito_client_id" {
   description = "既存のCognito Client ID"
   type        = string
 }
+
+variable "domain_name" {
+  description = "フロントエンドのドメイン名"
+  type        = string
+}
