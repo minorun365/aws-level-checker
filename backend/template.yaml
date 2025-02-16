@@ -51,7 +51,7 @@ Resources:
   LangChainLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
-      LayerName: !Sub 'alc-langchain-layer-${Environment}'
+      LayerName: !Sub 'alc-${Environment}-langchain'
       Description: Layer for LangChain and related libraries
       ContentUri: layers/langchain/
       CompatibleRuntimes:
