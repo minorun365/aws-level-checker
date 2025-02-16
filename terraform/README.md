@@ -101,3 +101,4 @@ terraform apply
 - 本番環境へのデプロイは十分なテスト後に実施してください
 - CloudFrontのキャッシュ設定を適切に管理してください
 - Route53は別アカウントで管理されているため、CloudFrontのドメイン名を使用してDNSレコードを作成する必要があります
+- Secrets Managerは手動構築が必要です
