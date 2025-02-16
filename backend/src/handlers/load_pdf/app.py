@@ -35,7 +35,7 @@ class HttpStatus:
 
 # 必要な環境変数のリスト
 REQUIRED_ENV_VARS = [
-    "S3_BUCKET_NAME"
+    "PDF_BUCKET_NAME"
 ]
 
 def validate_environment() -> None:
@@ -87,7 +87,7 @@ def save_to_s3(pdf_content: bytes, file_name: str) -> str:
     """
     try:
         s3 = boto3.client('s3')
-        bucket_name = os.environ["S3_BUCKET_NAME"]
+        bucket_name = os.environ["PDF_BUCKET_NAME"]
         object_key = f"uploads/{file_name}"
         
         s3.put_object(

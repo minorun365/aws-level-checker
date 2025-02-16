@@ -13,9 +13,9 @@ Parameters:
     AllowedValues:
       - dev
       - prd
-  S3BucketName:
+  PdfBucketName:
     Type: String
-    Description: PDFファイルを保存するS3バケット名
+    Description: PDFファイルを保存するS3バケット名（Terraformで作成したalc-dev-uploaded-pdf）
   BedrockInferenceProfileArn:
     Type: String
     Description: Bedrock推論プロファイルのARN
@@ -79,7 +79,7 @@ Resources:
       Timeout: 60        # PDFの処理に十分な時間を確保
       Environment:
         Variables:
-          S3_BUCKET_NAME: !Ref S3BucketName
+          PDF_BUCKET_NAME: !Ref PdfBucketName
       Policies:
         - AWSLambdaBasicExecutionRole
         - Version: '2012-10-17'
@@ -88,7 +88,7 @@ Resources:
               Action:
                 - s3:PutObject
                 - s3:GetObject
-              Resource: !Sub 'arn:aws:s3:::${S3BucketName}/*'
+              Resource: !Sub 'arn:aws:s3:::${PdfBucketName}/*'
       Events:
         ApiEvent:
           Type: Api

@@ -58,8 +58,7 @@ class BedrockConfig:
 REQUIRED_ENV_VARS: List[str] = [
     "LANGFUSE_SECRET_URL",
     "BEDROCK_INFERENCE_PROFILE_ARN",
-    "LANGFUSE_HOST",
-    "AWS_SESSION_TOKEN"
+    "LANGFUSE_HOST"
 ]
 
 def validate_environment() -> None:
@@ -230,8 +229,10 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> LambdaResponse:
         # 環境変数の検証
         validate_environment()
         
-        # 入力チェック
-        body = json.loads(event.get("body", "{}"))
+        # プロキシ統合からのリクエストボディを解析
+        body = event.get("body", "{}")
+        if isinstance(body, str):
+            body = json.loads(body)
         blog_content = body.get("blogContent")
         if not blog_content:
             return create_response(HttpStatus.BAD_REQUEST, {
