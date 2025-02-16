@@ -14,8 +14,3 @@ data "aws_cognito_user_pool_domain" "existing" {
   domain       = data.aws_cognito_user_pool.existing.domain
   user_pool_id = data.aws_cognito_user_pool.existing.id
 }
-
-# 既存のSecrets Managerシークレットの参照
-data "aws_secretsmanager_secret" "langfuse" {
-  name = "alc-langfuse-${var.environment}"
-}

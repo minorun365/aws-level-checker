@@ -28,6 +28,14 @@ module "frontend" {
   domain_name = var.domain_name
 }
 
+# Secrets Manager用モジュールの呼び出し
+module "secrets" {
+  source = "../../modules/secrets"
+
+  environment = "prd"
+  project     = var.project
+}
+
 # 既存のCognitoリソースの参照
 data "aws_cognito_user_pool" "existing" {
   user_pool_id = var.existing_cognito_user_pool_id
@@ -76,6 +84,16 @@ output "cloudfront_domain_name" {
 output "website_endpoint" {
   description = "フロントエンドのエンドポイント"
   value       = module.frontend.website_endpoint
+}
+
+output "langfuse_secret_arn" {
+  description = "作成したLangfuseシークレットのARN"
+  value       = module.secrets.secret_arn
+}
+
+output "langfuse_secret_name" {
+  description = "作成したLangfuseシークレットの名前"
+  value       = module.secrets.secret_name
 }
 
 output "cognito_user_pool_id" {

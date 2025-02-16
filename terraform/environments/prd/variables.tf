@@ -27,3 +27,9 @@ variable "allowed_origin" {
   description = "CORSで許可するオリジン"
   type        = string
 }
+
+variable "project" {
+  description = "プロジェクト名"
+  type        = string
+  default     = "aws-level-checker"
+}
