@@ -58,10 +58,10 @@ jobs:
           terraform apply -auto-approve -var-file=terraform.tfvars
 
       # バックエンドのデプロイ
-      - name: Python 3.9のセットアップ
+      - name: Python 3.12のセットアップ
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: '3.12'
 
       - name: SAM CLIのインストール
         uses: aws-actions/setup-sam@v2

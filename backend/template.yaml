@@ -32,7 +32,7 @@ Parameters:
 # 共通設定
 Globals:
   Function:
-    Runtime: python3.9
+    Runtime: python3.12
     MemorySize: 128
     Timeout: 30
     # Lambdaレイヤーの設定
@@ -74,7 +74,6 @@ Resources:
       CodeUri: src/handlers/load_pdf/
       Handler: app.lambda_handler
       Description: アップロードされたPDFファイルを処理するLambda関数
-      Runtime: python3.9
       MemorySize: 512    # PDFの処理に十分なメモリを確保
       Timeout: 60        # PDFの処理に十分な時間を確保
       Environment:
@@ -184,7 +183,6 @@ Resources:
       CodeUri: src/handlers/load_url/
       Handler: app.lambda_handler
       Description: 指定されたURLからコンテンツを取得して処理するLambda関数
-      Runtime: python3.9
       MemorySize: 128
       Timeout: 29
       Policies:
