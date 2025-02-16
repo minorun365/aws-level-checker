@@ -62,7 +62,7 @@ export class ApiService {
     }
 
     const data = await response.json();
-    return JSON.parse(data.body);
+    return JSON.parse(data.body) as T;
   }
 
   static async checkContent(
