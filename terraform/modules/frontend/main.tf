@@ -65,13 +65,21 @@ resource "aws_s3_bucket_policy" "frontend" {
   })
 }
 
+# ACM証明書の参照
+data "aws_acm_certificate" "frontend" {
+  domain      = var.domain_name
+  statuses    = ["ISSUED"]
+  provider    = aws
+  most_recent = true
+}
+
 # CloudFront Distribution
 resource "aws_cloudfront_distribution" "frontend" {
   enabled             = true
   is_ipv6_enabled    = true
   default_root_object = "index.html"
   price_class        = "PriceClass_200"
-  # aliases            = [var.domain_name]
+  aliases            = [var.domain_name]
 
   origin {
     domain_name              = aws_s3_bucket.frontend.bucket_regional_domain_name
@@ -113,10 +121,9 @@ resource "aws_cloudfront_distribution" "frontend" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
-    # acm_certificate_arn      = var.certificate_arn
-    # minimum_protocol_version = "TLSv1.2_2021"
-    # ssl_support_method       = "sni-only"
+    acm_certificate_arn      = data.aws_acm_certificate.frontend.arn
+    minimum_protocol_version = "TLSv1.2_2021"
+    ssl_support_method       = "sni-only"
   }
 
   tags = {

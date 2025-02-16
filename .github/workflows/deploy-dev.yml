@@ -42,8 +42,8 @@ jobs:
         run: |
           cat << EOF > terraform.tfvars
           existing_cognito_user_pool_id = "${{ vars.COGNITO_USER_POOL_ID }}"
-          existing_cognito_client_id    = "${{ vars.VITE_COGNITO_CLIENT_ID }}"
-          certificate_arn               = "${{ vars.CERTIFICATE_ARN }}"
+          existing_cognito_client_id    = "${{ secrets.VITE_COGNITO_CLIENT_ID }}"
+          domain_name                   = "${{ vars.SITE_DOMAIN }}"
           EOF
 
       - name: Terraformのデプロイ
