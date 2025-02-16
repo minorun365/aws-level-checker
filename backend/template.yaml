@@ -55,6 +55,10 @@ Resources:
       StageName: !Ref Environment
       EndpointConfiguration:
         Type: REGIONAL
+      BinaryMediaTypes:
+        - '*/*'
+      ApiSettings:
+        MaximumPayloadSize: 20971520  # 20MB
       Cors:
         AllowMethods: "OPTIONS,POST"
         AllowHeaders: "Content-Type,Authorization"
