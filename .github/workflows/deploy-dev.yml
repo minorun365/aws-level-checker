@@ -78,6 +78,7 @@ jobs:
           sam deploy --stack-name alc-dev --no-confirm-changeset --no-fail-on-empty-changeset \
             --parameter-overrides \
               Environment=dev \
+              PdfBucketName=${{ vars.PDF_BUCKET_NAME }} \
               BedrockInferenceProfileArn=${{ vars.BEDROCK_INFERENCE_PROFILE_ARN }} \
               LangfuseHost=${{ vars.LANGFUSE_HOST }} \
               LangfuseSecretUrl=${{ vars.LANGFUSE_SECRET_URL }}
