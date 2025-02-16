@@ -78,7 +78,7 @@ jobs:
               PdfBucketName=${{ vars.PDF_BUCKET_NAME }} \
               BedrockInferenceProfileArn=${{ vars.BEDROCK_INFERENCE_PROFILE_ARN }} \
               LangfuseHost=${{ vars.LANGFUSE_HOST }} \
-              LangfuseSecretUrl=${{ vars.LANGFUSE_SECRET_URL }} \
+              LangfuseSecretName=${{ vars.LANGFUSE_SECRET_NAME }} \
               CognitoUserPoolId=${{ vars.COGNITO_USER_POOL_ID }}
 
       # フロントエンドのデプロイ
