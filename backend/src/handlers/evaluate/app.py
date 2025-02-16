@@ -89,9 +89,10 @@ def create_response(status_code: int, message: Dict[str, Any]) -> LambdaResponse
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Headers": "Content-Type,Authorization",
             "Access-Control-Allow-Methods": "OPTIONS,POST",
-            "Access-Control-Allow-Credentials": "true"
+            "Access-Control-Allow-Credentials": "true",
+            "Content-Type": "application/json"
         },
-        "body": json.dumps(message)
+        "body": json.dumps(message, ensure_ascii=False)
     }
 
 def get_secrets() -> SecretConfig:
