@@ -56,10 +56,10 @@ Resources:
       EndpointConfiguration:
         Type: REGIONAL
       Cors:
-        AllowMethods: "'OPTIONS,POST'"
-        AllowHeaders: "'Content-Type,Authorization'"
-        AllowOrigin: "'*'"
-        AllowCredentials: "'true'"
+        AllowMethods: "OPTIONS,POST"
+        AllowHeaders: "Content-Type,Authorization"
+        AllowOrigin: "*"
+        AllowCredentials: "true"
       Auth:
         DefaultAuthorizer: CognitoAuthorizer
         Authorizers:
