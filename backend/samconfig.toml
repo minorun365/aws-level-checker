@@ -2,7 +2,7 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "alc-dev"
+stack_name = "aws-level-checker"
 resolve_s3 = true
 s3_prefix = "alc"
 region = "us-east-1"
