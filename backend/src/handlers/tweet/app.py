@@ -242,8 +242,8 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> LambdaResponse:
         # Langfuseセットアップ
         langfuse_handler, langfuse = setup_langfuse(
             secret,
-            event.get("userEmail"),
-            event.get("langfuseSessionId")
+            body.get("userEmail"),
+            body.get("langfuseSessionId")
         )
         
         # ツイート生成
