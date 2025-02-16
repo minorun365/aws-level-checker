@@ -78,7 +78,8 @@ jobs:
               PdfBucketName=${{ vars.PDF_BUCKET_NAME }} \
               BedrockInferenceProfileArn=${{ vars.BEDROCK_INFERENCE_PROFILE_ARN }} \
               LangfuseHost=${{ vars.LANGFUSE_HOST }} \
-              LangfuseSecretUrl=${{ vars.LANGFUSE_SECRET_URL }}
+              LangfuseSecretUrl=${{ vars.LANGFUSE_SECRET_URL }} \
+              CognitoUserPoolId=${{ vars.COGNITO_USER_POOL_ID }}
 
       # フロントエンドのデプロイ
       - name: Node.jsのセットアップ
