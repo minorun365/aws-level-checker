@@ -1,6 +1,6 @@
 # Secrets Managerのシークレット作成
 resource "aws_secretsmanager_secret" "langfuse" {
-  name = "alc-langfuse-${var.environment}"
+  name = "alc-${var.environment}-langfuse"
   description = "Langfuse API credentials for ${var.environment} environment"
 
   tags = {
