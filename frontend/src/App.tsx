@@ -301,7 +301,7 @@ function App() {
                           {selectedFile ? selectedFile.name : 'PDFファイルをドロップしてね'}
                         </p>
                         <p className="text-xs text-gray-400">
-                          PDF (最大10MB)
+                          PDF (最大5MB)
                         </p>
                       </div>
                       <input
