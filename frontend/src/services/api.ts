@@ -94,22 +94,12 @@ export class ApiService {
     params: UploadPdfRequest,
     idToken: string
   ): Promise<UploadPdfResponse> {
-    const response = await fetch(`${config.apiEndpoint}/load-pdf`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/octet-stream',
-        'Authorization': `Bearer ${idToken}`
-      },
-      body: params.pdfBase64,
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'APIエラーが発生しました');
-    }
-
-    const data = await response.json();
-    return data as UploadPdfResponse;
+    return this.makeRequest<UploadPdfResponse>(
+      `${config.apiEndpoint}/load-pdf`,
+      'POST',
+      idToken,
+      params
+    );
   }
 
   static async loadUrl(
