@@ -58,7 +58,8 @@ export class ApiService {
     });
 
     if (!response.ok) {
-      throw new Error('APIエラーが発生しました');
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'APIエラーが発生しました');
     }
 
     const data = await response.json();
