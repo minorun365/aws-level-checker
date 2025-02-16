@@ -1,0 +1,4 @@
+requests
+langchain-core
+langchain-aws
+langfuse
