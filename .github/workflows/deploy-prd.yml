@@ -119,7 +119,7 @@ jobs:
       - name: プロンプトの更新
         working-directory: ./prompts
         env:
-          LANGFUSE_PUBLIC_KEY: ${{ secrets.LANGFUSE_PUBLIC_KEY }}
+          LANGFUSE_PUBLIC_KEY: ${{ secrets.VITE_LANGFUSE_PUBLIC_KEY }}
           LANGFUSE_SECRET_KEY: ${{ secrets.LANGFUSE_SECRET_KEY }}
           LANGFUSE_HOST: ${{ vars.LANGFUSE_HOST }}
         run: python update_prompts.py
