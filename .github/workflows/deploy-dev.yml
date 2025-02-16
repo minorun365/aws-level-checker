@@ -44,6 +44,9 @@ jobs:
           existing_cognito_user_pool_id = "${{ vars.COGNITO_USER_POOL_ID }}"
           existing_cognito_client_id    = "${{ secrets.VITE_COGNITO_CLIENT_ID }}"
           domain_name                   = "${{ vars.SITE_DOMAIN }}"
+          document_bucket_name          = "${{ vars.PDF_BUCKET_NAME }}"
+          frontend_bucket_name          = "${{ vars.S3_BUCKET_NAME }}"
+          allowed_origin               = "${{ vars.VITE_SITE_URL }}"
           EOF
 
       - name: Terraformのデプロイ
