@@ -43,6 +43,9 @@ jobs:
           existing_cognito_user_pool_id = "${{ vars.COGNITO_USER_POOL_ID }}"
           existing_cognito_client_id    = "${{ secrets.VITE_COGNITO_CLIENT_ID }}"
           domain_name                   = "${{ vars.SITE_DOMAIN }}"
+          document_bucket_name          = "${{ vars.PDF_BUCKET_NAME }}"
+          frontend_bucket_name          = "${{ vars.S3_BUCKET_NAME }}"
+          allowed_origin               = "${{ vars.VITE_SITE_URL }}"
           EOF
 
       - name: Terraformのデプロイ
@@ -75,7 +78,8 @@ jobs:
               PdfBucketName=${{ vars.PDF_BUCKET_NAME }} \
               BedrockInferenceProfileArn=${{ vars.BEDROCK_INFERENCE_PROFILE_ARN }} \
               LangfuseHost=${{ vars.LANGFUSE_HOST }} \
-              LangfuseSecretUrl=${{ vars.LANGFUSE_SECRET_URL }}
+              LangfuseSecretUrl=${{ vars.LANGFUSE_SECRET_URL }} \
+              CognitoUserPoolId=${{ vars.COGNITO_USER_POOL_ID }}
 
       # フロントエンドのデプロイ
       - name: Node.jsのセットアップ

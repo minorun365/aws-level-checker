@@ -14,9 +14,9 @@ provider "aws" {
 module "document_bucket" {
   source = "../../modules/s3"
 
-  bucket_name = "alc-prd-uploaded-pdf"
+  bucket_name = var.document_bucket_name
   allowed_origins = [
-    "https://checker.minoruonda.com"
+    var.allowed_origin
   ]
 }
 
@@ -24,7 +24,7 @@ module "document_bucket" {
 module "frontend" {
   source = "../../modules/frontend"
 
-  bucket_name = "alc-prd-frontend"
+  bucket_name = var.frontend_bucket_name
   domain_name = var.domain_name
 }
 
