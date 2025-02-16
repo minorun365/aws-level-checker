@@ -68,6 +68,12 @@ jobs:
         with:
           use-installer: true
 
+      - name: LangChainレイヤーのセットアップ
+        working-directory: ./backend/layers/langchain
+        run: |
+          mkdir -p python
+          pip install --platform manylinux2014_x86_64 --implementation cp --python-version 3.12 --only-binary=:all: --target python/ -r requirements.txt
+
       - name: SAMビルド
         working-directory: ./backend
         run: sam build
