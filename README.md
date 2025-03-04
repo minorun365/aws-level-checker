@@ -15,3 +15,7 @@ https://checker.minoruonda.com/
 ## 紹介記事
 
 [あなたのブログのAWS技術レベルを判定するアプリ作りました！ - Qiita](https://qiita.com/minorun365/items/226867be3d122c2cfe4f)
+
+## 大きめのアップデート履歴
+
+- 2025/3/4: モデルをClaude 3.7 Sonnetにアップデートしました
