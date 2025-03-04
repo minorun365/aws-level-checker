@@ -35,3 +35,8 @@ https://checker.minoruonda.com/
 - CloudFrontのディストリビューションを作成する
 - Route 53でドメインを取得し、ホストゾーンを作成する
 - ACMで証明書を発行し、CloudFrontにドメイン名を設定する
+
+
+## 大きめのアップデート履歴
+
+- 2025/3/4: モデルをClaude 3.7 Sonnetにアップデートしました
