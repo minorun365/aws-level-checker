@@ -26,6 +26,10 @@ class EvaluationError(Exception):
     """出力評価関連のエラー"""
     pass
 
+class BedrockThrottlingError(Exception):
+    """Bedrock APIのスロットリングエラー"""
+    pass
+
 # 型定義
 class SecretConfig(TypedDict):
     """シークレット設定の型定義"""
@@ -209,6 +213,8 @@ def evaluate_output(
             }
         )
     except Exception as e:
+        if 'ThrottlingException' in str(e):
+            raise BedrockThrottlingError("Bedrockが高負荷のようです。1分ほど待ってからリトライください🙏")
         raise EvaluationError(f"出力評価に失敗しました: {str(e)}")
 
 def lambda_handler(event: Dict[str, Any], context: Any) -> LambdaResponse:
@@ -271,7 +277,7 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> LambdaResponse:
             "langfuseSessionId": langfuse_session_id
         })
 
-    except (EnvironmentError, SecretError, LangfuseError, EvaluationError) as e:
+    except (EnvironmentError, SecretError, LangfuseError, EvaluationError, BedrockThrottlingError) as e:
         error_message = str(e)
         return create_response(HttpStatus.SERVER_ERROR, {
             "message": f"エラーが発生しました: {error_message}"
