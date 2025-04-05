@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'prd環境へデプロイしたいブランチ'
+        required: true
+        default: 'main'
+        type: string
 
 permissions:
   id-token: write
