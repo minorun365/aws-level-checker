@@ -403,8 +403,8 @@ function App() {
           <CardContent className="space-y-4">
             <p className="text-white">
               このサービスは、2025年4月4日をもって終了しました。
-              登録いただいたメールアドレスは、速やかに削除させていただきます。
-              たくさんの方にご愛用いただき、ありがとうございました！
+              <br />
+              登録いただいたメールアドレスは、速やかに削除させていただきます。たくさんの方にご愛用いただき、ありがとうございました！
               <br /><br />
               ソースコードは以下に公開していますので、みなさんの環境でもデプロイすることが可能です。
               <br />
@@ -413,7 +413,7 @@ function App() {
                   github.com/minorun365/aws-level-checker
                 </a>
               </li>
-              <br /><br />
+              <br />
               このアプリケーションに関するご質問などは、XのDMまでご連絡ください。
               <br />
               <li className="text-blue-400 hover:text-blue-300">
