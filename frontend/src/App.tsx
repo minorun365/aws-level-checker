@@ -402,16 +402,21 @@ function App() {
 
           <CardContent className="space-y-4">
             <p className="text-white">
-              あなたの技術アウトプットのAWSレベルを判定します。
-            </p>
-            <Button
-              onClick={auth.signIn}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              サインインしてはじめよう！
-            </Button>
-            <p className="text-gray-400 text-sm">
-              ⚠️ このアプリの利用にあたり、メールアドレスを登録いただきます。登録されたメールアドレスは、アプリケーション利用状況のモニタリングならびに、常軌を逸した想定外利用などのトラブル発生時における個別連絡のために利用させていただくことがあります。その他、マーケティングなどの目的で使われたり、開発者以外の第三者へ共有されることはありません。
+              このサービスは、2025年4月4日をもって終了しました。
+              登録いただいたメールアドレスは、速やかに削除させていただきます。
+              たくさんの方にご愛用いただき、ありがとうございました！
+              <br /><br />
+              ソースコードは以下に公開していますので、みなさんの環境でもデプロイすることが可能です。
+              <br />
+              <a href="https://github.com/minorun365/aws-level-checker">
+                github.com/minorun365/aws-level-checker
+              </a>
+              <br /><br />
+              このアプリケーションに関するご質問などは、XのDMまでご連絡ください。
+              <br />
+              <a href="https://x.com/minorun365">
+                @minorun365
+              </a>
             </p>
           </CardContent>
         </Card>
