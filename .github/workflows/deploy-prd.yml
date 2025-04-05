@@ -7,10 +7,8 @@ on:
   workflow_dispatch:
     inputs:
       branch:
-        description: 'prd環境へデプロイしたいブランチ'
         required: true
-        default: 'main'
-        type: string
+        default: 'dev'
 
 permissions:
   id-token: write
