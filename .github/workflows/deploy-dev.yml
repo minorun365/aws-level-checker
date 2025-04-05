@@ -5,6 +5,7 @@ on:
     branches:
       - dev
       - 'feature/*'  # featureから始まる全てのブランチをトリガーとする
+  workflow_dispatch:
 
 permissions:
   id-token: write
