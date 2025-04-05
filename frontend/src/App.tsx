@@ -408,15 +408,19 @@ function App() {
               <br /><br />
               ソースコードは以下に公開していますので、みなさんの環境でもデプロイすることが可能です。
               <br />
-              <a href="https://github.com/minorun365/aws-level-checker">
-                github.com/minorun365/aws-level-checker
-              </a>
+              <li className="text-blue-400 hover:text-blue-300">
+                <a href="https://github.com/minorun365/aws-level-checker">
+                  github.com/minorun365/aws-level-checker
+                </a>
+              </li>
               <br /><br />
               このアプリケーションに関するご質問などは、XのDMまでご連絡ください。
               <br />
-              <a href="https://x.com/minorun365">
-                @minorun365
-              </a>
+              <li className="text-blue-400 hover:text-blue-300">
+                <a href="https://x.com/minorun365">
+                  @minorun365
+                </a>
+              </li>
             </p>
           </CardContent>
         </Card>
