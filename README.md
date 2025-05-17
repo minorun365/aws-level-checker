@@ -40,3 +40,5 @@ https://checker.minoruonda.com/
 ## 大きめのアップデート履歴
 
 - 2025/3/4: モデルをClaude 3.7 Sonnetにアップデートしました
+
+てすと
